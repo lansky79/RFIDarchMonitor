@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>系统测试</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .status {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+      }
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+      }
+      .error {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+      .info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>档案库房智能监测系统 - 测试页面</h1>
+
+    <div id="status" class="status info">正在检查系统状态...</div>
+
+    <h2>测试结果</h2>
+    <ul id="testResults"></ul>
+
+    <script>
+      // 简单的测试脚本
+      async function runTests() {
+        const statusDiv = document.getElementById("status");
+        const resultsUl = document.getElementById("testResults");
+
+        const tests = [
+          {
+            name: "检查后端服务",
+            test: async () => {
+              const response = await fetch("http://127.0.0.1:5000/api/health");
+              return response.ok;
+            },
+          },
+          {
+            name: "检查维护API",
+            test: async () => {
+              const response = await fetch(
+                "http://127.0.0.1:5000/api/maintenance/records"
+              );
+              return response.ok;
+            },
+          },
+          {
+            name: "检查系统信息API",
+            test: async () => {
+              const response = await fetch(
+                "http://127.0.0.1:5000/api/system/info"
+              );
+              return response.ok;
+            },
+          },
+        ];
+
+        let allPassed = true;
+
+        for (const test of tests) {
+          try {
+            const result = await test.test();
+            const li = document.createElement("li");
+            li.textContent = `${test.name}: ${result ? "✅ 通过" : "❌ 失败"}`;
+            li.style.color = result ? "green" : "red";
+            resultsUl.appendChild(li);
+
+            if (!result) allPassed = false;
+          } catch (error) {
+            const li = document.createElement("li");
+            li.textContent = `${test.name}: ❌ 错误 - ${error.message}`;
+            li.style.color = "red";
+            resultsUl.appendChild(li);
+            allPassed = false;
+          }
+        }
+
+        statusDiv.textContent = allPassed
+          ? "✅ 所有测试通过！系统运行正常。"
+          : "❌ 部分测试失败，请检查后端服务。";
+        statusDiv.className = `status ${allPassed ? "success" : "error"}`;
+      }
+
+      // 页面加载后运行测试
+      window.addEventListener("load", runTests);
+    </script>
+  </body>
+</html>

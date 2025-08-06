@@ -1,0 +1,4343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>档案库房智能监测系统</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <!-- 自定义样式 -->
+    <link href="css/custom.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- 左侧导航栏 -->
+      <div class="sidebar" id="sidebar">
+        <!-- 系统标题 -->
+        <div class="sidebar-header">
+          <div class="brand">
+            <i class="bi bi-archive"></i>
+            <span class="brand-text">档案库房智能监测系统</span>
+          </div>
+          <button class="sidebar-toggle" id="sidebarToggle">
+            <i class="bi bi-list"></i>
+          </button>
+        </div>
+
+        <!-- 导航菜单 -->
+        <nav class="sidebar-nav">
+          <ul class="nav-list">
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                href="#"
+                onclick="showPage('dashboard')"
+                data-page="dashboard"
+              >
+                <i class="bi bi-speedometer2"></i>
+                <span class="nav-text">仪表盘</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="#"
+                onclick="showPage('environment')"
+                data-page="environment"
+              >
+                <i class="bi bi-thermometer-half"></i>
+                <span class="nav-text">环境监测</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="#"
+                onclick="showPage('rfid')"
+                data-page="rfid"
+              >
+                <i class="bi bi-cpu"></i>
+                <span class="nav-text">RFID设备</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="#"
+                onclick="showPage('tracking')"
+                data-page="tracking"
+              >
+                <i class="bi bi-geo-alt"></i>
+                <span class="nav-text">档案追踪</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="#"
+                onclick="showPage('inventory')"
+                data-page="inventory"
+              >
+                <i class="bi bi-list-check"></i>
+                <span class="nav-text">智能盘点</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="#"
+                onclick="showPage('alerts')"
+                data-page="alerts"
+              >
+                <i class="bi bi-exclamation-triangle"></i>
+                <span class="nav-text">告警管理</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="#"
+                onclick="showPage('reports')"
+                data-page="reports"
+              >
+                <i class="bi bi-graph-up"></i>
+                <span class="nav-text">统计报表</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="#"
+                onclick="showPage('maintenance')"
+                data-page="maintenance"
+              >
+                <i class="bi bi-tools"></i>
+                <span class="nav-text">设备维护</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="#"
+                onclick="showPage('data-management')"
+                data-page="data-management"
+              >
+                <i class="bi bi-database"></i>
+                <span class="nav-text">数据管理</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="#"
+                onclick="showPage('settings')"
+                data-page="settings"
+              >
+                <i class="bi bi-gear"></i>
+                <span class="nav-text">系统配置</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- 侧边栏底部状态 -->
+        <div class="sidebar-footer">
+          <div class="status-item">
+            <span class="badge bg-success" id="systemStatus">系统正常</span>
+          </div>
+          <div class="status-item">
+            <i class="bi bi-clock"></i>
+            <span id="currentTime"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 主内容区域 -->
+      <div class="main-content" id="mainContent">
+        <!-- 仪表盘页面 -->
+        <div id="dashboard-page" class="page-content">
+          <div class="row">
+            <div class="col-12">
+              <h2><i class="bi bi-speedometer2"></i> 系统仪表盘</h2>
+            </div>
+          </div>
+
+          <!-- 系统状态卡片 -->
+          <div class="row mb-4">
+            <div class="col-md-3">
+              <div class="card bg-primary text-white">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                    <div>
+                      <h6 class="card-title">环境传感器</h6>
+                      <h3 id="sensorCount">0</h3>
+                      <small>在线设备</small>
+                    </div>
+                    <div class="align-self-center">
+                      <i class="bi bi-thermometer-half fs-1"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="card bg-success text-white">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                    <div>
+                      <h6 class="card-title">RFID设备</h6>
+                      <h3 id="rfidCount">0</h3>
+                      <small>在线设备</small>
+                    </div>
+                    <div class="align-self-center">
+                      <i class="bi bi-cpu fs-1"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="card bg-info text-white">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                    <div>
+                      <h6 class="card-title">档案总数</h6>
+                      <h3 id="archiveCount">0</h3>
+                      <small>已登记档案</small>
+                    </div>
+                    <div class="align-self-center">
+                      <i class="bi bi-archive fs-1"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="card bg-warning text-white">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between">
+                    <div>
+                      <h6 class="card-title">待处理告警</h6>
+                      <h3 id="alertCount">0</h3>
+                      <small>需要处理</small>
+                    </div>
+                    <div class="align-self-center">
+                      <i class="bi bi-exclamation-triangle fs-1"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 实时环境数据 -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-thermometer-half"></i> 实时环境数据</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row text-center">
+                    <div class="col-4">
+                      <h6>温度</h6>
+                      <h4 class="text-primary" id="currentTemp">--°C</h4>
+                    </div>
+                    <div class="col-4">
+                      <h6>湿度</h6>
+                      <h4 class="text-info" id="currentHumidity">--%</h4>
+                    </div>
+                    <div class="col-4">
+                      <h6>光照</h6>
+                      <h4 class="text-warning" id="currentLight">-- lux</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-bell"></i> 最新告警</h5>
+                </div>
+                <div class="card-body">
+                  <div id="recentAlerts">
+                    <p class="text-muted">暂无告警信息</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 系统信息 -->
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-info-circle"></i> 系统信息</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <p>
+                        <strong>运行状态：</strong
+                        ><span class="badge bg-success" id="runningStatus"
+                          >正常运行</span
+                        >
+                      </p>
+                      <p>
+                        <strong>启动时间：</strong
+                        ><span id="startTime">--</span>
+                      </p>
+                      <p>
+                        <strong>运行时间：</strong
+                        ><span id="uptime">2天 5小时 30分钟</span>
+                      </p>
+                    </div>
+                    <div class="col-md-6">
+                      <p>
+                        <strong>数据库状态：</strong
+                        ><span class="badge bg-success" id="dbStatus"
+                          >连接正常</span
+                        >
+                      </p>
+                      <p>
+                        <strong>最后更新：</strong
+                        ><span id="lastUpdate">--</span>
+                      </p>
+                      <p>
+                        <strong>CPU使用率：</strong
+                        ><span id="dashboardCpuUsage">15%</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 环境监测页面 -->
+        <div id="environment-page" class="page-content" style="display: none">
+          <div class="row">
+            <div class="col-12">
+              <h2><i class="bi bi-thermometer-half"></i> 环境监测</h2>
+            </div>
+          </div>
+
+          <!-- 实时环境数据卡片 -->
+          <div class="row mb-4">
+            <div class="col-md-4">
+              <div class="card border-primary">
+                <div class="card-header bg-primary text-white">
+                  <h5><i class="bi bi-thermometer-half"></i> 温度监测</h5>
+                </div>
+                <div class="card-body text-center">
+                  <h2 class="text-primary" id="envTemp">22.5°C</h2>
+                  <p class="mb-1">正常范围: 18-25°C</p>
+                  <span class="badge bg-success">正常</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card border-info">
+                <div class="card-header bg-info text-white">
+                  <h5><i class="bi bi-droplet"></i> 湿度监测</h5>
+                </div>
+                <div class="card-body text-center">
+                  <h2 class="text-info" id="envHumidity">55%</h2>
+                  <p class="mb-1">正常范围: 40-60%</p>
+                  <span class="badge bg-success">正常</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card border-warning">
+                <div class="card-header bg-warning text-white">
+                  <h5><i class="bi bi-sun"></i> 光照监测</h5>
+                </div>
+                <div class="card-body text-center">
+                  <h2 class="text-warning" id="envLight">320 lux</h2>
+                  <p class="mb-1">正常范围: 200-500 lux</p>
+                  <span class="badge bg-success">正常</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 传感器管理 -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="card">
+                <div
+                  class="card-header d-flex justify-content-between align-items-center"
+                >
+                  <h5><i class="bi bi-cpu"></i> 传感器设备管理</h5>
+                  <div class="btn-group">
+                    <button
+                      class="btn btn-primary btn-sm"
+                      data-bs-toggle="modal"
+                      data-bs-target="#addSensorModal"
+                    >
+                      <i class="bi bi-plus-circle"></i> 添加传感器
+                    </button>
+                    <button
+                      class="btn btn-success btn-sm"
+                      onclick="refreshSensorData()"
+                    >
+                      <i class="bi bi-arrow-clockwise"></i> 刷新数据
+                    </button>
+                    <button
+                      class="btn btn-info btn-sm"
+                      onclick="exportSensorData()"
+                    >
+                      <i class="bi bi-download"></i> 导出数据
+                    </button>
+                    <button
+                      class="btn btn-warning btn-sm"
+                      onclick="calibrateSensors()"
+                    >
+                      <i class="bi bi-gear"></i> 校准传感器
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>传感器ID</th>
+                          <th>位置</th>
+                          <th>状态</th>
+                          <th>温度</th>
+                          <th>湿度</th>
+                          <th>光照</th>
+                          <th>最后更新</th>
+                          <th>操作</th>
+                        </tr>
+                      </thead>
+                      <tbody id="sensorTableBody">
+                        <tr>
+                          <td>SENSOR_001</td>
+                          <td>档案室A区-东侧</td>
+                          <td><span class="badge bg-success">在线</span></td>
+                          <td>22.5°C</td>
+                          <td>55%</td>
+                          <td>320 lux</td>
+                          <td>2分钟前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="editSensor('SENSOR_001')"
+                            >
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-danger"
+                              onclick="deleteSensor('SENSOR_001')"
+                            >
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>SENSOR_002</td>
+                          <td>档案室A区-西侧</td>
+                          <td><span class="badge bg-success">在线</span></td>
+                          <td>21.8°C</td>
+                          <td>48%</td>
+                          <td>280 lux</td>
+                          <td>1分钟前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="editSensor('SENSOR_002')"
+                            >
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-danger"
+                              onclick="deleteSensor('SENSOR_002')"
+                            >
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>SENSOR_003</td>
+                          <td>档案室B区-中央</td>
+                          <td><span class="badge bg-success">在线</span></td>
+                          <td>23.2°C</td>
+                          <td>52%</td>
+                          <td>295 lux</td>
+                          <td>3分钟前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="editSensor('SENSOR_003')"
+                            >
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-danger"
+                              onclick="deleteSensor('SENSOR_003')"
+                            >
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>SENSOR_004</td>
+                          <td>档案室C区-北侧</td>
+                          <td><span class="badge bg-warning">离线</span></td>
+                          <td>--</td>
+                          <td>--</td>
+                          <td>--</td>
+                          <td>15分钟前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="editSensor('SENSOR_004')"
+                            >
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-danger"
+                              onclick="deleteSensor('SENSOR_004')"
+                            >
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>SENSOR_005</td>
+                          <td>档案室C区-南侧</td>
+                          <td><span class="badge bg-success">在线</span></td>
+                          <td>24.1°C</td>
+                          <td>58%</td>
+                          <td>315 lux</td>
+                          <td>1分钟前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="editSensor('SENSOR_005')"
+                            >
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-danger"
+                              onclick="deleteSensor('SENSOR_005')"
+                            >
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>SENSOR_006</td>
+                          <td>特藏室-恒温区</td>
+                          <td><span class="badge bg-success">在线</span></td>
+                          <td>20.0°C</td>
+                          <td>45%</td>
+                          <td>200 lux</td>
+                          <td>30秒前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="editSensor('SENSOR_006')"
+                            >
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-danger"
+                              onclick="deleteSensor('SENSOR_006')"
+                            >
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 环境阈值配置 -->
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-sliders"></i> 环境阈值配置</h5>
+                </div>
+                <div class="card-body">
+                  <form id="thresholdForm">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <h6>温度阈值</h6>
+                        <div class="mb-3">
+                          <label class="form-label">最低温度 (°C)</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            value="18"
+                            step="0.1"
+                          />
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label">最高温度 (°C)</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            value="25"
+                            step="0.1"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <h6>湿度阈值</h6>
+                        <div class="mb-3">
+                          <label class="form-label">最低湿度 (%)</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            value="40"
+                          />
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label">最高湿度 (%)</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            value="60"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <h6>光照阈值</h6>
+                        <div class="mb-3">
+                          <label class="form-label">最低光照 (lux)</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            value="200"
+                          />
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label">最高光照 (lux)</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            value="500"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                      <i class="bi bi-check-circle"></i> 保存配置
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RFID设备管理页面 -->
+        <div id="rfid-page" class="page-content" style="display: none">
+          <div class="row">
+            <div class="col-12">
+              <h2><i class="bi bi-cpu"></i> RFID设备管理</h2>
+            </div>
+          </div>
+
+          <!-- RFID设备状态 -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="card" style="height: 550px">
+                <div
+                  class="card-header d-flex justify-content-between align-items-center"
+                >
+                  <h5><i class="bi bi-router"></i> RFID读写器</h5>
+                  <div class="btn-group">
+                    <button
+                      class="btn btn-primary btn-sm"
+                      data-bs-toggle="modal"
+                      data-bs-target="#addRfidDeviceModal"
+                    >
+                      <i class="bi bi-plus-circle"></i> 添加设备
+                    </button>
+                    <button
+                      class="btn btn-success btn-sm"
+                      onclick="scanAllDevices()"
+                    >
+                      <i class="bi bi-search"></i> 扫描设备
+                    </button>
+                    <button
+                      class="btn btn-info btn-sm"
+                      onclick="testAllDevices()"
+                    >
+                      <i class="bi bi-check-circle"></i> 测试连接
+                    </button>
+                    <button
+                      class="btn btn-warning btn-sm"
+                      onclick="resetAllDevices()"
+                    >
+                      <i class="bi bi-arrow-counterclockwise"></i> 重置设备
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-sm">
+                      <thead>
+                        <tr>
+                          <th>设备名称</th>
+                          <th>位置</th>
+                          <th>状态</th>
+                          <th>操作</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>RFID_READER_001</td>
+                          <td>档案室主入口</td>
+                          <td><span class="badge bg-success">在线</span></td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="configRfidDevice('001')"
+                            >
+                              <i class="bi bi-gear"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>RFID_READER_002</td>
+                          <td>档案室主出口</td>
+                          <td><span class="badge bg-success">在线</span></td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="configRfidDevice('002')"
+                            >
+                              <i class="bi bi-gear"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>RFID_READER_003</td>
+                          <td>A区通道</td>
+                          <td><span class="badge bg-success">在线</span></td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="configRfidDevice('003')"
+                            >
+                              <i class="bi bi-gear"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>RFID_READER_004</td>
+                          <td>B区通道</td>
+                          <td><span class="badge bg-warning">离线</span></td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="configRfidDevice('004')"
+                            >
+                              <i class="bi bi-gear"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>RFID_READER_005</td>
+                          <td>C区通道</td>
+                          <td><span class="badge bg-success">在线</span></td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="configRfidDevice('005')"
+                            >
+                              <i class="bi bi-gear"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>RFID_READER_006</td>
+                          <td>特藏室门禁</td>
+                          <td><span class="badge bg-success">在线</span></td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="configRfidDevice('006')"
+                            >
+                              <i class="bi bi-gear"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card mb-3" style="min-height: 265px">
+                <div class="card-header">
+                  <h5><i class="bi bi-activity"></i> 实时扫描状态</h5>
+                </div>
+                <div
+                  class="card-body d-flex flex-column justify-content-center"
+                >
+                  <div class="row text-center">
+                    <div class="col-6">
+                      <h6 class="mb-2">今日扫描</h6>
+                      <h3 class="text-primary mb-1">156</h3>
+                      <small class="text-muted">次</small>
+                    </div>
+                    <div class="col-6">
+                      <h6 class="mb-2">在线设备</h6>
+                      <h3 class="text-success mb-1">5</h3>
+                      <small class="text-muted">台</small>
+                    </div>
+                    <div class="col-6">
+                      <h6 class="mb-2">扫描频率</h6>
+                      <h4 class="text-info mb-1">2.5</h4>
+                      <small class="text-muted">次/分钟</small>
+                    </div>
+                    <div class="col-6">
+                      <h6 class="mb-2">响应时间</h6>
+                      <h4 class="text-warning mb-1">125</h4>
+                      <small class="text-muted">毫秒</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- RFID参数配置 -->
+              <div class="card" style="min-height: 275px">
+                <div class="card-header">
+                  <h5><i class="bi bi-sliders"></i> RFID参数配置</h5>
+                </div>
+                <div class="card-body d-flex flex-column">
+                  <form id="rfidConfigForm" class="flex-grow-1">
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label form-label-sm"
+                            >扫描间隔 (秒)</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control form-control-sm"
+                            value="5"
+                            min="1"
+                            max="60"
+                          />
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label form-label-sm"
+                            >读取功率 (%)</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control form-control-sm"
+                            value="80"
+                            min="10"
+                            max="100"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-6">
+                        <div class="mb-3">
+                          <label class="form-label form-label-sm"
+                            >超时时间 (秒)</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control form-control-sm"
+                            value="10"
+                            min="1"
+                            max="30"
+                          />
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label form-label-sm"
+                            >重试次数</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control form-control-sm"
+                            value="3"
+                            min="1"
+                            max="10"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="text-center mt-auto">
+                      <button type="submit" class="btn btn-primary btn-sm px-4">
+                        <i class="bi bi-check-circle"></i> 保存配置
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RFID标签管理 -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="card">
+                <div
+                  class="card-header d-flex justify-content-between align-items-center"
+                >
+                  <h5><i class="bi bi-tags"></i> RFID标签管理</h5>
+                  <div>
+                    <button
+                      class="btn btn-success btn-sm"
+                      data-bs-toggle="modal"
+                      data-bs-target="#addTagModal"
+                    >
+                      <i class="bi bi-plus-circle"></i> 添加标签
+                    </button>
+                    <button class="btn btn-info btn-sm" onclick="importTags()">
+                      <i class="bi bi-upload"></i> 批量导入
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="搜索标签ID或档案编号..."
+                        id="tagSearchInput"
+                      />
+                    </div>
+                    <div class="col-md-3">
+                      <select class="form-select" id="tagStatusFilter">
+                        <option value="">全部状态</option>
+                        <option value="active">活跃</option>
+                        <option value="inactive">非活跃</option>
+                        <option value="lost">丢失</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <button class="btn btn-primary" onclick="searchTags()">
+                        <i class="bi bi-search"></i> 搜索
+                      </button>
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>标签ID</th>
+                          <th>档案编号</th>
+                          <th>标签类型</th>
+                          <th>状态</th>
+                          <th>最后位置</th>
+                          <th>最后扫描</th>
+                          <th>操作</th>
+                        </tr>
+                      </thead>
+                      <tbody id="rfidTagTableBody">
+                        <tr>
+                          <td>TAG001234567890</td>
+                          <td>ARCH2024001</td>
+                          <td>档案标签</td>
+                          <td><span class="badge bg-success">活跃</span></td>
+                          <td>档案室A区-东侧</td>
+                          <td>5分钟前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="editTag('TAG001234567890')"
+                            >
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="locateTag('TAG001234567890')"
+                            >
+                              <i class="bi bi-geo-alt"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-danger"
+                              onclick="deleteTag('TAG001234567890')"
+                            >
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>TAG001234567891</td>
+                          <td>ARCH2024002</td>
+                          <td>档案标签</td>
+                          <td><span class="badge bg-success">活跃</span></td>
+                          <td>档案室B区-中央</td>
+                          <td>3分钟前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="editTag('TAG001234567891')"
+                            >
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="locateTag('TAG001234567891')"
+                            >
+                              <i class="bi bi-geo-alt"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-danger"
+                              onclick="deleteTag('TAG001234567891')"
+                            >
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>TAG001234567892</td>
+                          <td>ARCH2024003</td>
+                          <td>档案标签</td>
+                          <td><span class="badge bg-success">活跃</span></td>
+                          <td>档案室C区-南侧</td>
+                          <td>1分钟前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="editTag('TAG001234567892')"
+                            >
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="locateTag('TAG001234567892')"
+                            >
+                              <i class="bi bi-geo-alt"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-danger"
+                              onclick="deleteTag('TAG001234567892')"
+                            >
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>TAG001234567893</td>
+                          <td>ARCH2024004</td>
+                          <td>档案标签</td>
+                          <td><span class="badge bg-warning">非活跃</span></td>
+                          <td>档案室A区-西侧</td>
+                          <td>2小时前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="editTag('TAG001234567893')"
+                            >
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="locateTag('TAG001234567893')"
+                            >
+                              <i class="bi bi-geo-alt"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-danger"
+                              onclick="deleteTag('TAG001234567893')"
+                            >
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>TAG001234567894</td>
+                          <td>ARCH2024005</td>
+                          <td>设备标签</td>
+                          <td><span class="badge bg-success">活跃</span></td>
+                          <td>特藏室-恒温区</td>
+                          <td>10分钟前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="editTag('TAG001234567894')"
+                            >
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="locateTag('TAG001234567894')"
+                            >
+                              <i class="bi bi-geo-alt"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-danger"
+                              onclick="deleteTag('TAG001234567894')"
+                            >
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>TAG001234567895</td>
+                          <td>ARCH2024006</td>
+                          <td>档案标签</td>
+                          <td><span class="badge bg-danger">丢失</span></td>
+                          <td>未知位置</td>
+                          <td>1天前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="editTag('TAG001234567895')"
+                            >
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="locateTag('TAG001234567895')"
+                            >
+                              <i class="bi bi-geo-alt"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-danger"
+                              onclick="deleteTag('TAG001234567895')"
+                            >
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RFID参数配置 -->
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-sliders"></i> RFID参数配置</h5>
+                </div>
+                <div class="card-body">
+                  <form id="rfidConfigForm">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label class="form-label">扫描功率 (dBm)</label>
+                          <input
+                            type="range"
+                            class="form-range"
+                            min="10"
+                            max="30"
+                            value="25"
+                            id="scanPower"
+                          />
+                          <div class="d-flex justify-content-between">
+                            <small>10</small>
+                            <small id="powerValue">25</small>
+                            <small>30</small>
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label">扫描间隔 (秒)</label>
+                          <input
+                            type="number"
+                            class="form-control"
+                            value="5"
+                            min="1"
+                            max="60"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label class="form-label">天线配置</label>
+                          <div class="form-check">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              checked
+                              id="antenna1"
+                            />
+                            <label class="form-check-label" for="antenna1"
+                              >天线1</label
+                            >
+                          </div>
+                          <div class="form-check">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              checked
+                              id="antenna2"
+                            />
+                            <label class="form-check-label" for="antenna2"
+                              >天线2</label
+                            >
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label">协议选择</label>
+                          <select class="form-select">
+                            <option>EPC Class1 Gen2</option>
+                            <option>ISO18000-6C</option>
+                            <option>ISO18000-6B</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                      <i class="bi bi-check-circle"></i> 保存配置
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 档案追踪页面 -->
+        <div id="tracking-page" class="page-content" style="display: none">
+          <div class="row">
+            <div class="col-12">
+              <h2><i class="bi bi-geo-alt"></i> 档案追踪</h2>
+            </div>
+          </div>
+
+          <!-- 快速搜索 -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-search"></i> 档案快速定位</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="输入档案编号、标题或RFID标签ID..."
+                        id="archiveSearchInput"
+                      />
+                    </div>
+                    <div class="col-md-3">
+                      <select class="form-select" id="searchType">
+                        <option value="all">全部搜索</option>
+                        <option value="code">档案编号</option>
+                        <option value="title">档案标题</option>
+                        <option value="rfid">RFID标签</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="btn-group w-100">
+                        <button
+                          class="btn btn-primary"
+                          onclick="searchArchive()"
+                        >
+                          <i class="bi bi-search"></i> 搜索
+                        </button>
+                        <button
+                          class="btn btn-success"
+                          onclick="realTimeTrack()"
+                        >
+                          <i class="bi bi-broadcast"></i> 实时追踪
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="btn-group btn-group-sm">
+                        <button
+                          class="btn btn-outline-info"
+                          onclick="batchSearch()"
+                        >
+                          <i class="bi bi-list-ul"></i> 批量搜索
+                        </button>
+                        <button
+                          class="btn btn-outline-warning"
+                          onclick="advancedSearch()"
+                        >
+                          <i class="bi bi-funnel"></i> 高级搜索
+                        </button>
+                        <button
+                          class="btn btn-outline-success"
+                          onclick="exportSearchResults()"
+                        >
+                          <i class="bi bi-download"></i> 导出结果
+                        </button>
+                        <button
+                          class="btn btn-outline-secondary"
+                          onclick="clearSearch()"
+                        >
+                          <i class="bi bi-x-circle"></i> 清空搜索
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 档案列表 -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="card">
+                <div
+                  class="card-header d-flex justify-content-between align-items-center"
+                >
+                  <h5><i class="bi bi-archive"></i> 档案管理</h5>
+                  <div class="btn-group">
+                    <button
+                      class="btn btn-primary btn-sm"
+                      data-bs-toggle="modal"
+                      data-bs-target="#addArchiveModal"
+                    >
+                      <i class="bi bi-plus-circle"></i> 添加档案
+                    </button>
+                    <button
+                      class="btn btn-success btn-sm"
+                      onclick="batchImportArchives()"
+                    >
+                      <i class="bi bi-upload"></i> 批量导入
+                    </button>
+                    <button
+                      class="btn btn-info btn-sm"
+                      onclick="syncArchiveData()"
+                    >
+                      <i class="bi bi-arrow-repeat"></i> 同步数据
+                    </button>
+                    <button
+                      class="btn btn-warning btn-sm"
+                      onclick="validateArchives()"
+                    >
+                      <i class="bi bi-check-square"></i> 数据校验
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="row mb-3">
+                    <div class="col-md-3">
+                      <select class="form-select" id="categoryFilter">
+                        <option value="">全部类别</option>
+                        <option value="personnel">人事档案</option>
+                        <option value="financial">财务档案</option>
+                        <option value="project">项目档案</option>
+                        <option value="contract">合同档案</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <select class="form-select" id="locationFilter">
+                        <option value="">全部位置</option>
+                        <option value="A区">档案室A区</option>
+                        <option value="B区">档案室B区</option>
+                        <option value="C区">档案室C区</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <select class="form-select" id="statusFilter">
+                        <option value="">全部状态</option>
+                        <option value="normal">正常</option>
+                        <option value="borrowed">借出</option>
+                        <option value="missing">缺失</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <button
+                        class="btn btn-outline-primary"
+                        onclick="filterArchives()"
+                      >
+                        <i class="bi bi-funnel"></i> 筛选
+                      </button>
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>档案编号</th>
+                          <th>档案标题</th>
+                          <th>类别</th>
+                          <th>RFID标签</th>
+                          <th>当前位置</th>
+                          <th>状态</th>
+                          <th>最后更新</th>
+                          <th>操作</th>
+                        </tr>
+                      </thead>
+                      <tbody id="archiveTableBody">
+                        <tr>
+                          <td>ARCH2024001</td>
+                          <td>员工入职档案-张三</td>
+                          <td>人事档案</td>
+                          <td>TAG001234567890</td>
+                          <td>档案室A区-东侧</td>
+                          <td><span class="badge bg-success">正常</span></td>
+                          <td>5分钟前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="viewArchive('ARCH2024001')"
+                            >
+                              <i class="bi bi-eye"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="trackArchive('ARCH2024001')"
+                            >
+                              <i class="bi bi-geo-alt"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-warning"
+                              onclick="borrowArchive('ARCH2024001')"
+                            >
+                              <i class="bi bi-box-arrow-right"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>ARCH2024002</td>
+                          <td>2024年度预算报告</td>
+                          <td>财务档案</td>
+                          <td>TAG001234567891</td>
+                          <td>档案室B区-中央</td>
+                          <td><span class="badge bg-success">正常</span></td>
+                          <td>3分钟前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="viewArchive('ARCH2024002')"
+                            >
+                              <i class="bi bi-eye"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="trackArchive('ARCH2024002')"
+                            >
+                              <i class="bi bi-geo-alt"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-warning"
+                              onclick="borrowArchive('ARCH2024002')"
+                            >
+                              <i class="bi bi-box-arrow-right"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>ARCH2024003</td>
+                          <td>ABC公司合作协议</td>
+                          <td>合同档案</td>
+                          <td>TAG001234567892</td>
+                          <td>档案室C区-南侧</td>
+                          <td><span class="badge bg-success">正常</span></td>
+                          <td>1分钟前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="viewArchive('ARCH2024003')"
+                            >
+                              <i class="bi bi-eye"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="trackArchive('ARCH2024003')"
+                            >
+                              <i class="bi bi-geo-alt"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-warning"
+                              onclick="borrowArchive('ARCH2024003')"
+                            >
+                              <i class="bi bi-box-arrow-right"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>ARCH2024004</td>
+                          <td>员工离职档案-李四</td>
+                          <td>人事档案</td>
+                          <td>TAG001234567893</td>
+                          <td>档案室A区-西侧</td>
+                          <td><span class="badge bg-warning">借出</span></td>
+                          <td>2小时前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="viewArchive('ARCH2024004')"
+                            >
+                              <i class="bi bi-eye"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="trackArchive('ARCH2024004')"
+                            >
+                              <i class="bi bi-geo-alt"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-success"
+                              onclick="returnArchive('ARCH2024004')"
+                            >
+                              <i class="bi bi-box-arrow-in-left"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>ARCH2024005</td>
+                          <td>设备采购清单2024</td>
+                          <td>财务档案</td>
+                          <td>TAG001234567894</td>
+                          <td>特藏室-恒温区</td>
+                          <td><span class="badge bg-success">正常</span></td>
+                          <td>10分钟前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="viewArchive('ARCH2024005')"
+                            >
+                              <i class="bi bi-eye"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="trackArchive('ARCH2024005')"
+                            >
+                              <i class="bi bi-geo-alt"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-warning"
+                              onclick="borrowArchive('ARCH2024005')"
+                            >
+                              <i class="bi bi-box-arrow-right"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>ARCH2024006</td>
+                          <td>项目验收报告-XYZ</td>
+                          <td>项目档案</td>
+                          <td>TAG001234567895</td>
+                          <td>未知位置</td>
+                          <td><span class="badge bg-danger">缺失</span></td>
+                          <td>1天前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="viewArchive('ARCH2024006')"
+                            >
+                              <i class="bi bi-eye"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-danger"
+                              onclick="reportMissing('ARCH2024006')"
+                            >
+                              <i class="bi bi-exclamation-triangle"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="searchArchive('ARCH2024006')"
+                            >
+                              <i class="bi bi-search"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>ARCH2024007</td>
+                          <td>年度审计报告</td>
+                          <td>财务档案</td>
+                          <td>TAG001234567896</td>
+                          <td>档案室B区-北侧</td>
+                          <td><span class="badge bg-success">正常</span></td>
+                          <td>8分钟前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="viewArchive('ARCH2024007')"
+                            >
+                              <i class="bi bi-eye"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="trackArchive('ARCH2024007')"
+                            >
+                              <i class="bi bi-geo-alt"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-warning"
+                              onclick="borrowArchive('ARCH2024007')"
+                            >
+                              <i class="bi bi-box-arrow-right"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>ARCH2024008</td>
+                          <td>培训资料汇编</td>
+                          <td>人事档案</td>
+                          <td>TAG001234567897</td>
+                          <td>档案室C区-北侧</td>
+                          <td><span class="badge bg-success">正常</span></td>
+                          <td>12分钟前</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="viewArchive('ARCH2024008')"
+                            >
+                              <i class="bi bi-eye"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="trackArchive('ARCH2024008')"
+                            >
+                              <i class="bi bi-geo-alt"></i>
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-warning"
+                              onclick="borrowArchive('ARCH2024008')"
+                            >
+                              <i class="bi bi-box-arrow-right"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 位置历史 -->
+          <div class="row">
+            <div class="col-md-8">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-clock-history"></i> 位置变更历史</h5>
+                </div>
+                <div class="card-body">
+                  <div class="timeline" id="locationTimeline">
+                    <div class="timeline-item">
+                      <div class="timeline-marker bg-success"></div>
+                      <div class="timeline-content">
+                        <h6>档案室A区</h6>
+                        <p class="text-muted mb-1">
+                          ARCH2024001 - 员工入职档案-张三
+                        </p>
+                        <small class="text-muted">2024-08-05 18:45:23</small>
+                      </div>
+                    </div>
+                    <div class="timeline-item">
+                      <div class="timeline-marker bg-info"></div>
+                      <div class="timeline-content">
+                        <h6>档案室入口</h6>
+                        <p class="text-muted mb-1">档案移动检测</p>
+                        <small class="text-muted">2024-08-05 18:30:15</small>
+                      </div>
+                    </div>
+                    <div class="timeline-item">
+                      <div class="timeline-marker bg-warning"></div>
+                      <div class="timeline-content">
+                        <h6>档案室C区</h6>
+                        <p class="text-muted mb-1">档案归还</p>
+                        <small class="text-muted">2024-08-05 17:20:45</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-map"></i> 位置分布</h5>
+                </div>
+                <div class="card-body">
+                  <div class="location-stats">
+                    <div class="d-flex justify-content-between mb-2">
+                      <span>档案室A区</span>
+                      <span class="badge bg-primary">45</span>
+                    </div>
+                    <div class="progress mb-3">
+                      <div
+                        class="progress-bar bg-primary"
+                        style="width: 45%"
+                      ></div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                      <span>档案室B区</span>
+                      <span class="badge bg-success">38</span>
+                    </div>
+                    <div class="progress mb-3">
+                      <div
+                        class="progress-bar bg-success"
+                        style="width: 38%"
+                      ></div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                      <span>档案室C区</span>
+                      <span class="badge bg-info">17</span>
+                    </div>
+                    <div class="progress mb-3">
+                      <div
+                        class="progress-bar bg-info"
+                        style="width: 17%"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 智能盘点页面 -->
+        <div id="inventory-page" class="page-content" style="display: none">
+          <div class="row">
+            <div class="col-12">
+              <h2><i class="bi bi-list-check"></i> 智能盘点</h2>
+            </div>
+          </div>
+
+          <!-- 盘点任务控制 -->
+          <div class="row mb-4">
+            <div class="col-md-8">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-play-circle"></i> 盘点任务控制</h5>
+                </div>
+                <div class="card-body">
+                  <form id="inventoryTaskForm">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label class="form-label">任务名称</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            placeholder="例：2024年8月档案盘点"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label class="form-label">盘点区域</label>
+                          <select class="form-select" required>
+                            <option value="">选择盘点区域</option>
+                            <option value="all">全部区域</option>
+                            <option value="A">档案室A区</option>
+                            <option value="B">档案室B区</option>
+                            <option value="C">档案室C区</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label class="form-label">盘点模式</label>
+                          <select class="form-select">
+                            <option value="auto">自动盘点</option>
+                            <option value="manual">手动盘点</option>
+                            <option value="scheduled">定时盘点</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label class="form-label">扫描功率</label>
+                          <select class="form-select">
+                            <option value="low">低功率</option>
+                            <option value="medium" selected>中功率</option>
+                            <option value="high">高功率</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="d-flex gap-2 flex-wrap">
+                      <button type="submit" class="btn btn-success">
+                        <i class="bi bi-play-fill"></i> 开始盘点
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-warning"
+                        onclick="pauseInventory()"
+                      >
+                        <i class="bi bi-pause-fill"></i> 暂停盘点
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-danger"
+                        onclick="stopInventory()"
+                      >
+                        <i class="bi bi-stop-fill"></i> 停止盘点
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-info"
+                        onclick="quickInventory()"
+                      >
+                        <i class="bi bi-lightning-fill"></i> 快速盘点
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        onclick="scheduleInventory()"
+                      >
+                        <i class="bi bi-calendar-plus"></i> 定时盘点
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-speedometer2"></i> 盘点进度</h5>
+                </div>
+                <div class="card-body text-center">
+                  <div class="progress mb-3" style="height: 20px">
+                    <div
+                      class="progress-bar bg-success"
+                      role="progressbar"
+                      style="width: 65%"
+                      id="inventoryProgress"
+                    >
+                      65%
+                    </div>
+                  </div>
+                  <p class="mb-1">已盘点：<strong>65/100</strong></p>
+                  <p class="mb-0 text-muted">预计剩余时间：15分钟</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 盘点结果统计 -->
+          <div class="row mb-4">
+            <div class="col-md-3">
+              <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                  <h3>65</h3>
+                  <p class="mb-0">已找到档案</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                  <h3>3</h3>
+                  <p class="mb-0">缺失档案</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                  <h3>2</h3>
+                  <p class="mb-0">多余档案</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                  <h3>100</h3>
+                  <p class="mb-0">预期总数</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 盘点任务列表 -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="card">
+                <div
+                  class="card-header d-flex justify-content-between align-items-center"
+                >
+                  <h5><i class="bi bi-list-ul"></i> 盘点任务历史</h5>
+                  <button
+                    class="btn btn-outline-primary btn-sm"
+                    onclick="exportInventoryReport()"
+                  >
+                    <i class="bi bi-download"></i> 导出报告
+                  </button>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>任务名称</th>
+                          <th>盘点区域</th>
+                          <th>开始时间</th>
+                          <th>完成时间</th>
+                          <th>状态</th>
+                          <th>结果</th>
+                          <th>操作</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>2024年8月档案盘点</td>
+                          <td>档案室A区</td>
+                          <td>2024-08-05 14:30</td>
+                          <td>进行中</td>
+                          <td><span class="badge bg-primary">进行中</span></td>
+                          <td>65/100</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="viewInventoryDetail('001')"
+                            >
+                              <i class="bi bi-eye"></i> 详情
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>2024年7月档案盘点</td>
+                          <td>全部区域</td>
+                          <td>2024-07-15 09:00</td>
+                          <td>2024-07-15 11:30</td>
+                          <td><span class="badge bg-success">已完成</span></td>
+                          <td>298/300</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="viewInventoryDetail('002')"
+                            >
+                              <i class="bi bi-eye"></i> 详情
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-success"
+                              onclick="downloadReport('002')"
+                            >
+                              <i class="bi bi-download"></i> 报告
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 异常档案处理 -->
+          <div class="row">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-exclamation-triangle"></i> 缺失档案</h5>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-sm">
+                      <thead>
+                        <tr>
+                          <th>档案编号</th>
+                          <th>档案标题</th>
+                          <th>预期位置</th>
+                          <th>操作</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>ARCH2024003</td>
+                          <td>项目合同-ABC公司</td>
+                          <td>档案室A区</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-warning"
+                              onclick="markAsFound('ARCH2024003')"
+                            >
+                              <i class="bi bi-check"></i> 标记找到
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>ARCH2024004</td>
+                          <td>员工离职档案-李四</td>
+                          <td>档案室B区</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-warning"
+                              onclick="markAsFound('ARCH2024004')"
+                            >
+                              <i class="bi bi-check"></i> 标记找到
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-plus-circle"></i> 多余档案</h5>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-sm">
+                      <thead>
+                        <tr>
+                          <th>RFID标签</th>
+                          <th>发现位置</th>
+                          <th>发现时间</th>
+                          <th>操作</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>TAG001234567899</td>
+                          <td>档案室A区</td>
+                          <td>14:45</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="identifyExtra('TAG001234567899')"
+                            >
+                              <i class="bi bi-search"></i> 识别
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>TAG001234567898</td>
+                          <td>档案室C区</td>
+                          <td>15:20</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="identifyExtra('TAG001234567898')"
+                            >
+                              <i class="bi bi-search"></i> 识别
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 设备维护页面 -->
+        <div id="maintenance-page" class="page-content" style="display: none">
+          <div class="row">
+            <div class="col-12">
+              <h2><i class="bi bi-tools"></i> 设备维护管理</h2>
+            </div>
+          </div>
+
+          <!-- 维护统计卡片 -->
+          <div class="row mb-4">
+            <div class="col-md-3">
+              <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                  <h3 id="totalMaintenanceCount">0</h3>
+                  <p class="mb-0">总维护记录</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                  <h3 id="scheduledMaintenanceCount">0</h3>
+                  <p class="mb-0">计划中</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                  <h3 id="completedMaintenanceCount">0</h3>
+                  <p class="mb-0">已完成</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-danger text-white">
+                <div class="card-body text-center">
+                  <h3 id="overdueMaintenanceCount">0</h3>
+                  <p class="mb-0">已逾期</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 维护记录管理 -->
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <h5><i class="bi bi-list-ul"></i> 维护记录</h5>
+                  <div>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addMaintenanceModal">
+                      <i class="bi bi-plus-circle"></i> 添加维护计划
+                    </button>
+                    <button class="btn btn-info btn-sm" onclick="refreshMaintenanceData()">
+                      <i class="bi bi-arrow-clockwise"></i> 刷新
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <!-- 搜索和筛选 -->
+                  <div class="row mb-3">
+                    <div class="col-md-3">
+                      <input type="text" class="form-control form-control-sm" placeholder="搜索设备名称或技术员" id="maintenanceSearchInput">
+                    </div>
+                    <div class="col-md-2">
+                      <select class="form-select form-select-sm" id="deviceTypeFilter">
+                        <option value="">所有设备类型</option>
+                        <option value="rfid">RFID设备</option>
+                        <option value="sensor">传感器</option>
+                        <option value="network">网络设备</option>
+                        <option value="server">服务器</option>
+                        <option value="other">其他设备</option>
+                      </select>
+                    </div>
+                    <div class="col-md-2">
+                      <select class="form-select form-select-sm" id="maintenanceTypeFilter">
+                        <option value="">所有维护类型</option>
+                        <option value="routine">定期检查</option>
+                        <option value="preventive">预防性维护</option>
+                        <option value="corrective">故障维修</option>
+                        <option value="upgrade">设备升级</option>
+                        <option value="calibration">设备校准</option>
+                      </select>
+                    </div>
+                    <div class="col-md-2">
+                      <select class="form-select form-select-sm" id="statusFilter">
+                        <option value="">所有状态</option>
+                        <option value="scheduled">已计划</option>
+                        <option value="in_progress">进行中</option>
+                        <option value="completed">已完成</option>
+                        <option value="cancelled">已取消</option>
+                        <option value="overdue">已逾期</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <button class="btn btn-outline-primary btn-sm" onclick="searchMaintenanceRecords()">
+                        <i class="bi bi-search"></i> 搜索
+                      </button>
+                      <button class="btn btn-outline-secondary btn-sm" onclick="resetMaintenanceFilters()">
+                        <i class="bi bi-arrow-counterclockwise"></i> 重置
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- 维护记录表格 -->
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>设备名称</th>
+                          <th>设备类型</th>
+                          <th>维护类型</th>
+                          <th>计划日期</th>
+                          <th>负责人</th>
+                          <th>状态</th>
+                          <th>费用</th>
+                          <th>操作</th>
+                        </tr>
+                      </thead>
+                      <tbody id="maintenanceTableBody">
+                        <!-- 维护记录数据将通过JavaScript动态加载 -->
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- 分页 -->
+                  <nav aria-label="维护记录分页">
+                    <ul class="pagination pagination-sm justify-content-center" id="maintenancePagination">
+                      <!-- 分页按钮将通过JavaScript动态生成 -->
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 告警管理页面 -->
+        <div id="alerts-page" class="page-content" style="display: none">
+          <div class="row">
+            <div class="col-12">
+              <h2><i class="bi bi-exclamation-triangle"></i> 告警管理</h2>
+            </div>
+          </div>
+
+          <!-- 告警统计 -->
+          <div class="row mb-4">
+            <div class="col-md-3">
+              <div class="card bg-danger text-white">
+                <div class="card-body text-center">
+                  <h3>2</h3>
+                  <p class="mb-0">严重告警</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                  <h3>5</h3>
+                  <p class="mb-0">警告告警</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                  <h3>3</h3>
+                  <p class="mb-0">信息告警</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                  <h3>15</h3>
+                  <p class="mb-0">已处理</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 告警列表 -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="card">
+                <div
+                  class="card-header d-flex justify-content-between align-items-center"
+                >
+                  <h5><i class="bi bi-bell"></i> 告警列表</h5>
+                  <div>
+                    <button
+                      class="btn btn-outline-success btn-sm"
+                      onclick="markAllAsRead()"
+                    >
+                      <i class="bi bi-check-all"></i> 全部已读
+                    </button>
+                    <button
+                      class="btn btn-outline-primary btn-sm"
+                      data-bs-toggle="modal"
+                      data-bs-target="#alertRuleModal"
+                    >
+                      <i class="bi bi-gear"></i> 告警规则
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="row mb-3">
+                    <div class="col-md-3">
+                      <select class="form-select" id="alertLevelFilter">
+                        <option value="">全部级别</option>
+                        <option value="critical">严重</option>
+                        <option value="warning">警告</option>
+                        <option value="info">信息</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <select class="form-select" id="alertTypeFilter">
+                        <option value="">全部类型</option>
+                        <option value="environment">环境异常</option>
+                        <option value="device">设备异常</option>
+                        <option value="archive">档案异常</option>
+                        <option value="system">系统异常</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <select class="form-select" id="alertStatusFilter">
+                        <option value="">全部状态</option>
+                        <option value="pending">待处理</option>
+                        <option value="processing">处理中</option>
+                        <option value="resolved">已解决</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <button class="btn btn-primary" onclick="filterAlerts()">
+                        <i class="bi bi-funnel"></i> 筛选
+                      </button>
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>级别</th>
+                          <th>类型</th>
+                          <th>告警内容</th>
+                          <th>来源</th>
+                          <th>发生时间</th>
+                          <th>状态</th>
+                          <th>处理人</th>
+                          <th>操作</th>
+                        </tr>
+                      </thead>
+                      <tbody id="alertTableBody">
+                        <tr class="table-danger">
+                          <td><span class="badge bg-danger">严重</span></td>
+                          <td>环境异常</td>
+                          <td>档案室A区温度过高：28.5°C</td>
+                          <td>SENSOR_001</td>
+                          <td>2024-08-05 18:30</td>
+                          <td><span class="badge bg-warning">待处理</span></td>
+                          <td>-</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="handleAlert('001')"
+                            >
+                              <i class="bi bi-tools"></i> 处理
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="viewAlertDetail('001')"
+                            >
+                              <i class="bi bi-eye"></i> 详情
+                            </button>
+                          </td>
+                        </tr>
+                        <tr class="table-danger">
+                          <td><span class="badge bg-danger">严重</span></td>
+                          <td>档案异常</td>
+                          <td>档案ARCH2024006已丢失超过24小时</td>
+                          <td>系统监控</td>
+                          <td>2024-08-05 18:15</td>
+                          <td><span class="badge bg-warning">待处理</span></td>
+                          <td>-</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="handleAlert('002')"
+                            >
+                              <i class="bi bi-tools"></i> 处理
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="viewAlertDetail('002')"
+                            >
+                              <i class="bi bi-eye"></i> 详情
+                            </button>
+                          </td>
+                        </tr>
+                        <tr class="table-warning">
+                          <td><span class="badge bg-warning">警告</span></td>
+                          <td>设备异常</td>
+                          <td>RFID读写器004离线超过10分钟</td>
+                          <td>RFID_READER_004</td>
+                          <td>2024-08-05 17:45</td>
+                          <td><span class="badge bg-info">处理中</span></td>
+                          <td>张三</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="handleAlert('003')"
+                            >
+                              <i class="bi bi-tools"></i> 处理
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="viewAlertDetail('003')"
+                            >
+                              <i class="bi bi-eye"></i> 详情
+                            </button>
+                          </td>
+                        </tr>
+                        <tr class="table-warning">
+                          <td><span class="badge bg-warning">警告</span></td>
+                          <td>环境异常</td>
+                          <td>特藏室湿度偏低：38%</td>
+                          <td>SENSOR_006</td>
+                          <td>2024-08-05 17:30</td>
+                          <td><span class="badge bg-info">处理中</span></td>
+                          <td>李四</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="handleAlert('004')"
+                            >
+                              <i class="bi bi-tools"></i> 处理
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="viewAlertDetail('004')"
+                            >
+                              <i class="bi bi-eye"></i> 详情
+                            </button>
+                          </td>
+                        </tr>
+                        <tr class="table-warning">
+                          <td><span class="badge bg-warning">警告</span></td>
+                          <td>档案异常</td>
+                          <td>档案ARCH2024004借出超过预定时间</td>
+                          <td>系统监控</td>
+                          <td>2024-08-05 17:00</td>
+                          <td><span class="badge bg-warning">待处理</span></td>
+                          <td>-</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="handleAlert('005')"
+                            >
+                              <i class="bi bi-tools"></i> 处理
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="viewAlertDetail('005')"
+                            >
+                              <i class="bi bi-eye"></i> 详情
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><span class="badge bg-info">信息</span></td>
+                          <td>系统异常</td>
+                          <td>数据库连接异常已自动恢复</td>
+                          <td>系统监控</td>
+                          <td>2024-08-05 16:45</td>
+                          <td><span class="badge bg-success">已解决</span></td>
+                          <td>系统</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="viewAlertDetail('006')"
+                            >
+                              <i class="bi bi-eye"></i> 详情
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><span class="badge bg-info">信息</span></td>
+                          <td>设备异常</td>
+                          <td>RFID读写器002连接不稳定</td>
+                          <td>RFID_READER_002</td>
+                          <td>2024-08-05 16:20</td>
+                          <td><span class="badge bg-success">已解决</span></td>
+                          <td>王五</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="viewAlertDetail('007')"
+                            >
+                              <i class="bi bi-eye"></i> 详情
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td><span class="badge bg-info">信息</span></td>
+                          <td>环境异常</td>
+                          <td>档案室C区光照强度偏高已恢复正常</td>
+                          <td>SENSOR_005</td>
+                          <td>2024-08-05 15:30</td>
+                          <td><span class="badge bg-success">已解决</span></td>
+                          <td>张三</td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-info"
+                              onclick="viewAlertDetail('008')"
+                            >
+                              <i class="bi bi-eye"></i> 详情
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 告警规则配置 -->
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-sliders"></i> 告警规则配置</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h6>环境告警规则</h6>
+                      <div class="form-check form-switch mb-2">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          checked
+                          id="tempAlert"
+                        />
+                        <label class="form-check-label" for="tempAlert"
+                          >温度异常告警</label
+                        >
+                      </div>
+                      <div class="form-check form-switch mb-2">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          checked
+                          id="humidityAlert"
+                        />
+                        <label class="form-check-label" for="humidityAlert"
+                          >湿度异常告警</label
+                        >
+                      </div>
+                      <div class="form-check form-switch mb-2">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          checked
+                          id="lightAlert"
+                        />
+                        <label class="form-check-label" for="lightAlert"
+                          >光照异常告警</label
+                        >
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <h6>档案告警规则</h6>
+                      <div class="form-check form-switch mb-2">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          checked
+                          id="missingAlert"
+                        />
+                        <label class="form-check-label" for="missingAlert"
+                          >档案缺失告警</label
+                        >
+                      </div>
+                      <div class="form-check form-switch mb-2">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          checked
+                          id="moveAlert"
+                        />
+                        <label class="form-check-label" for="moveAlert"
+                          >异常移动告警</label
+                        >
+                      </div>
+                      <div class="form-check form-switch mb-2">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="soundAlert"
+                        />
+                        <label class="form-check-label" for="soundAlert"
+                          >声音告警</label
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    class="btn btn-primary mt-3"
+                    onclick="saveAlertRules()"
+                  >
+                    <i class="bi bi-check-circle"></i> 保存规则
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 统计报表页面 -->
+        <div id="reports-page" class="page-content" style="display: none">
+          <div class="row">
+            <div class="col-12">
+              <h2><i class="bi bi-graph-up"></i> 统计报表</h2>
+            </div>
+          </div>
+
+          <!-- 报表类型选择 -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-filter"></i> 报表生成</h5>
+                </div>
+                <div class="card-body">
+                  <form id="reportForm">
+                    <div class="row">
+                      <div class="col-md-3">
+                        <div class="mb-3">
+                          <label class="form-label">报表类型</label>
+                          <select class="form-select" id="reportType">
+                            <option value="environment">环境数据报表</option>
+                            <option value="archive">档案统计报表</option>
+                            <option value="inventory">盘点结果报表</option>
+                            <option value="alert">告警统计报表</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="mb-3">
+                          <label class="form-label">时间范围</label>
+                          <select class="form-select" id="timeRange">
+                            <option value="today">今天</option>
+                            <option value="week">本周</option>
+                            <option value="month">本月</option>
+                            <option value="quarter">本季度</option>
+                            <option value="year">本年</option>
+                            <option value="custom">自定义</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="mb-3">
+                          <label class="form-label">开始日期</label>
+                          <input
+                            type="date"
+                            class="form-control"
+                            id="startDate"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="mb-3">
+                          <label class="form-label">结束日期</label>
+                          <input
+                            type="date"
+                            class="form-control"
+                            id="endDate"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                      <button
+                        type="button"
+                        class="btn btn-primary"
+                        onclick="generateReport()"
+                      >
+                        <i class="bi bi-bar-chart"></i> 生成报表
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-success"
+                        onclick="exportReport()"
+                      >
+                        <i class="bi bi-download"></i> 导出Excel
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-info"
+                        onclick="exportPDF()"
+                      >
+                        <i class="bi bi-file-pdf"></i> 导出PDF
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 图表展示 -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-bar-chart"></i> 环境数据趋势</h5>
+                </div>
+                <div class="card-body">
+                  <canvas id="environmentChart" height="200"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-pie-chart"></i> 档案分布统计</h5>
+                </div>
+                <div class="card-body">
+                  <canvas id="archiveChart" height="200"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 数据表格 -->
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-table"></i> 详细数据</h5>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-striped" id="reportTable">
+                      <thead>
+                        <tr>
+                          <th>时间</th>
+                          <th>传感器ID</th>
+                          <th>温度(°C)</th>
+                          <th>湿度(%)</th>
+                          <th>光照(lux)</th>
+                          <th>状态</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>2024-08-05 18:00</td>
+                          <td>SENSOR_001</td>
+                          <td>22.5</td>
+                          <td>55</td>
+                          <td>320</td>
+                          <td><span class="badge bg-success">正常</span></td>
+                        </tr>
+                        <tr>
+                          <td>2024-08-05 17:30</td>
+                          <td>SENSOR_002</td>
+                          <td>21.8</td>
+                          <td>48</td>
+                          <td>280</td>
+                          <td><span class="badge bg-success">正常</span></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 设备维护页面 -->
+        <div id="maintenance-page" class="page-content" style="display: none">
+          <div class="row">
+            <div class="col-12">
+              <h2><i class="bi bi-tools"></i> 设备维护</h2>
+            </div>
+          </div>
+
+          <!-- 维护计划 -->
+          <div class="row mb-4">
+            <div class="col-md-8">
+              <div class="card">
+                <div
+                  class="card-header d-flex justify-content-between align-items-center"
+                >
+                  <h5><i class="bi bi-calendar-check"></i> 维护计划</h5>
+                  <button
+                    class="btn btn-primary btn-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#addMaintenanceModal"
+                  >
+                    <i class="bi bi-plus-circle"></i> 添加计划
+                  </button>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>设备类型</th>
+                          <th>设备名称</th>
+                          <th>维护类型</th>
+                          <th>计划日期</th>
+                          <th>负责人</th>
+                          <th>状态</th>
+                          <th>操作</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>传感器</td>
+                          <td>SENSOR_001</td>
+                          <td>定期检查</td>
+                          <td>2024-08-10</td>
+                          <td>张三</td>
+                          <td><span class="badge bg-warning">计划中</span></td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-success"
+                              onclick="completeMaintenance('001')"
+                            >
+                              <i class="bi bi-check"></i> 完成
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="editMaintenance('001')"
+                            >
+                              <i class="bi bi-pencil"></i> 编辑
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>RFID设备</td>
+                          <td>RFID_READER_001</td>
+                          <td>清洁保养</td>
+                          <td>2024-08-15</td>
+                          <td>李四</td>
+                          <td><span class="badge bg-warning">计划中</span></td>
+                          <td>
+                            <button
+                              class="btn btn-sm btn-outline-success"
+                              onclick="completeMaintenance('002')"
+                            >
+                              <i class="bi bi-check"></i> 完成
+                            </button>
+                            <button
+                              class="btn btn-sm btn-outline-primary"
+                              onclick="editMaintenance('002')"
+                            >
+                              <i class="bi bi-pencil"></i> 编辑
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-speedometer2"></i> 维护统计</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row text-center">
+                    <div class="col-6">
+                      <h4 class="text-warning">5</h4>
+                      <small>待维护</small>
+                    </div>
+                    <div class="col-6">
+                      <h4 class="text-success">12</h4>
+                      <small>已完成</small>
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row text-center">
+                    <div class="col-6">
+                      <h4 class="text-info">¥2,500</h4>
+                      <small>本月费用</small>
+                    </div>
+                    <div class="col-6">
+                      <h4 class="text-primary">¥18,600</h4>
+                      <small>年度费用</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 维护历史 -->
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-clock-history"></i> 维护历史记录</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row mb-3">
+                    <div class="col-md-3">
+                      <select class="form-select" id="deviceTypeFilter">
+                        <option value="">全部设备类型</option>
+                        <option value="sensor">传感器</option>
+                        <option value="rfid">RFID设备</option>
+                        <option value="network">网络设备</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <select class="form-select" id="maintenanceTypeFilter">
+                        <option value="">全部维护类型</option>
+                        <option value="routine">定期检查</option>
+                        <option value="repair">故障维修</option>
+                        <option value="upgrade">设备升级</option>
+                        <option value="cleaning">清洁保养</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <input
+                        type="date"
+                        class="form-control"
+                        id="maintenanceDateFilter"
+                      />
+                    </div>
+                    <div class="col-md-3">
+                      <button
+                        class="btn btn-primary"
+                        onclick="filterMaintenance()"
+                      >
+                        <i class="bi bi-funnel"></i> 筛选
+                      </button>
+                    </div>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th>维护日期</th>
+                          <th>设备类型</th>
+                          <th>设备名称</th>
+                          <th>维护类型</th>
+                          <th>维护内容</th>
+                          <th>费用</th>
+                          <th>技术员</th>
+                          <th>状态</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>2024-08-01</td>
+                          <td>传感器</td>
+                          <td>SENSOR_003</td>
+                          <td>定期检查</td>
+                          <td>校准温湿度传感器</td>
+                          <td>¥200</td>
+                          <td>张三</td>
+                          <td><span class="badge bg-success">已完成</span></td>
+                        </tr>
+                        <tr>
+                          <td>2024-07-28</td>
+                          <td>RFID设备</td>
+                          <td>RFID_READER_002</td>
+                          <td>故障维修</td>
+                          <td>更换天线模块</td>
+                          <td>¥800</td>
+                          <td>李四</td>
+                          <td><span class="badge bg-success">已完成</span></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 数据采集配置页面 -->
+        <div id="collection-page" class="page-content" style="display: none">
+          <div class="row">
+            <div class="col-12">
+              <h2><i class="bi bi-collection"></i> 数据采集配置</h2>
+            </div>
+          </div>
+
+          <!-- 采集控制面板 -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-play-circle"></i> 采集控制</h5>
+                </div>
+                <div class="card-body">
+                  <div
+                    class="d-flex justify-content-between align-items-center mb-3"
+                  >
+                    <span>采集状态：</span>
+                    <span class="badge bg-success" id="collectionStatus"
+                      >运行中</span
+                    >
+                  </div>
+                  <div class="d-grid gap-2">
+                    <button class="btn btn-warning" id="pauseCollectionBtn">
+                      <i class="bi bi-pause-circle"></i> 暂停采集
+                    </button>
+                    <button
+                      class="btn btn-success"
+                      id="resumeCollectionBtn"
+                      style="display: none"
+                    >
+                      <i class="bi bi-play-circle"></i> 恢复采集
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-speedometer2"></i> 性能监控</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row text-center">
+                    <div class="col-6">
+                      <h6>CPU使用率</h6>
+                      <h4 class="text-primary" id="cpuUsage">--%</h4>
+                    </div>
+                    <div class="col-6">
+                      <h6>内存使用率</h6>
+                      <h4 class="text-info" id="memoryUsage">--%</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 采集频率配置 -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-gear"></i> 采集频率配置</h5>
+                </div>
+                <div class="card-body">
+                  <form id="collectionConfigForm">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label for="sensorInterval" class="form-label"
+                            >传感器采集间隔（秒）</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="sensorInterval"
+                            min="1"
+                            max="300"
+                            value="30"
+                          />
+                          <div class="form-text">建议范围：10-60秒</div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label for="rfidInterval" class="form-label"
+                            >RFID扫描间隔（秒）</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control"
+                            id="rfidInterval"
+                            min="1"
+                            max="60"
+                            value="10"
+                          />
+                          <div class="form-text">建议范围：5-30秒</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                      <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle"></i> 保存配置
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="resetConfigBtn"
+                      >
+                        <i class="bi bi-arrow-clockwise"></i> 重置默认
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 采集状态监控 -->
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-activity"></i> 采集状态监控</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <h6>传感器采集</h6>
+                      <p>最后采集：<span id="sensorLastCollection">--</span></p>
+                      <p>
+                        今日采集次数：<span id="sensorCollectionCount">0</span>
+                      </p>
+                    </div>
+                    <div class="col-md-4">
+                      <h6>RFID扫描</h6>
+                      <p>最后扫描：<span id="rfidLastScan">--</span></p>
+                      <p>今日扫描次数：<span id="rfidScanCount">0</span></p>
+                    </div>
+                    <div class="col-md-4">
+                      <h6>系统状态</h6>
+                      <p>运行时间：<span id="systemUptime">--</span></p>
+                      <p>错误次数：<span id="errorCount">0</span></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 数据采集页面 -->
+        <div id="collection-page" class="page-content" style="display: none">
+          <div class="row">
+            <div class="col-12">
+              <h2><i class="bi bi-collection"></i> 数据管理</h2>
+            </div>
+          </div>
+
+          <!-- 数据采集控制和数据管理 -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="card" style="height: 400px">
+                <div class="card-header">
+                  <h5><i class="bi bi-play-circle"></i> 数据采集控制</h5>
+                </div>
+                <div class="card-body">
+                  <div class="mb-4">
+                    <h6>采集状态</h6>
+                    <div class="d-flex align-items-center mb-3">
+                      <span class="badge bg-success me-2" id="collectionStatus"
+                        >运行中</span
+                      >
+                      <small class="text-muted"
+                        >最后采集:
+                        <span id="lastCollectionTime">2分钟前</span></small
+                      >
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex">
+                      <button
+                        class="btn btn-warning"
+                        onclick="pauseCollection()"
+                      >
+                        <i class="bi bi-pause-circle"></i> 暂停采集
+                      </button>
+                      <button
+                        class="btn btn-success"
+                        onclick="resumeCollection()"
+                      >
+                        <i class="bi bi-play-circle"></i> 恢复采集
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <h6>采集频率设置</h6>
+                    <div class="row">
+                      <div class="col-6">
+                        <label class="form-label form-label-sm"
+                          >环境数据间隔 (秒)</label
+                        >
+                        <input
+                          type="number"
+                          class="form-control form-control-sm"
+                          value="30"
+                          min="10"
+                          max="300"
+                        />
+                      </div>
+                      <div class="col-6">
+                        <label class="form-label form-label-sm"
+                          >RFID扫描间隔 (秒)</label
+                        >
+                        <input
+                          type="number"
+                          class="form-control form-control-sm"
+                          value="5"
+                          min="1"
+                          max="60"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="text-center">
+                    <button
+                      class="btn btn-primary btn-sm"
+                      onclick="saveCollectionSettings()"
+                    >
+                      <i class="bi bi-check-circle"></i> 保存设置
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card" style="height: 400px">
+                <div class="card-header">
+                  <h5><i class="bi bi-database"></i> 数据管理</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row mb-3">
+                    <div class="col-6">
+                      <button
+                        class="btn btn-info btn-sm w-100"
+                        onclick="backupDatabase()"
+                      >
+                        <i class="bi bi-download"></i> 备份数据库
+                      </button>
+                    </div>
+                    <div class="col-6">
+                      <button
+                        class="btn btn-warning btn-sm w-100"
+                        onclick="restoreDatabase()"
+                      >
+                        <i class="bi bi-upload"></i> 恢复数据库
+                      </button>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-6">
+                      <button
+                        class="btn btn-danger btn-sm w-100"
+                        onclick="clearOldData()"
+                      >
+                        <i class="bi bi-trash"></i> 清理历史数据
+                      </button>
+                    </div>
+                    <div class="col-6">
+                      <button
+                        class="btn btn-secondary btn-sm w-100"
+                        onclick="exportData()"
+                      >
+                        <i class="bi bi-file-earmark-arrow-down"></i> 导出数据
+                      </button>
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="text-center">
+                    <p class="mb-1">数据库大小：<strong>125 MB</strong></p>
+                    <p class="mb-1">
+                      最后备份：<strong>2024-08-05 10:30</strong>
+                    </p>
+                    <p class="mb-0">数据记录：<strong>15,678 条</strong></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 采集统计 -->
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-bar-chart"></i> 采集统计</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row text-center">
+                    <div class="col-md-3">
+                      <h6>今日采集次数</h6>
+                      <h3 class="text-primary" id="todayCollections">1,256</h3>
+                      <small>次</small>
+                    </div>
+                    <div class="col-md-3">
+                      <h6>采集成功率</h6>
+                      <h3 class="text-success" id="collectionSuccessRate">
+                        98.5
+                      </h3>
+                      <small>%</small>
+                    </div>
+                    <div class="col-md-3">
+                      <h6>平均响应时间</h6>
+                      <h3 class="text-info" id="avgResponseTime">125</h3>
+                      <small>毫秒</small>
+                    </div>
+                    <div class="col-md-3">
+                      <h6>错误次数</h6>
+                      <h3 class="text-warning" id="errorCount">18</h3>
+                      <small>次</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 数据管理页面 -->
+        <div
+          id="data-management-page"
+          class="page-content"
+          style="display: none"
+        >
+          <div class="row">
+            <div class="col-12">
+              <h2><i class="bi bi-database"></i> 数据管理</h2>
+            </div>
+          </div>
+
+          <!-- 数据库维护 -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-tools"></i> 数据库维护</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row mb-3">
+                    <div class="col-6">
+                      <button
+                        class="btn btn-info w-100"
+                        onclick="backupDatabase()"
+                      >
+                        <i class="bi bi-download"></i> 备份数据库
+                      </button>
+                    </div>
+                    <div class="col-6">
+                      <button
+                        class="btn btn-warning w-100"
+                        onclick="restoreDatabase()"
+                      >
+                        <i class="bi bi-upload"></i> 恢复数据库
+                      </button>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-6">
+                      <button
+                        class="btn btn-success w-100"
+                        onclick="optimizeDatabase()"
+                      >
+                        <i class="bi bi-speedometer2"></i> 优化数据库
+                      </button>
+                    </div>
+                    <div class="col-6">
+                      <button
+                        class="btn btn-secondary w-100"
+                        onclick="checkDatabase()"
+                      >
+                        <i class="bi bi-check-circle"></i> 检查完整性
+                      </button>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-6">
+                      <button
+                        class="btn btn-danger w-100"
+                        onclick="clearOldData()"
+                      >
+                        <i class="bi bi-trash"></i> 清理历史数据
+                      </button>
+                    </div>
+                    <div class="col-6">
+                      <button
+                        class="btn btn-primary w-100"
+                        onclick="exportData()"
+                      >
+                        <i class="bi bi-file-earmark-arrow-down"></i> 导出数据
+                      </button>
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="text-center">
+                    <p class="mb-1">
+                      数据库大小：<strong id="dbSize">125 MB</strong>
+                    </p>
+                    <p class="mb-1">
+                      最后备份：<strong id="lastBackup"
+                        >2024-08-05 10:30</strong
+                      >
+                    </p>
+                    <p class="mb-0">
+                      数据记录：<strong id="recordCount">15,678 条</strong>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-gear"></i> 数据清理配置</h5>
+                </div>
+                <div class="card-body">
+                  <form id="dataCleanupForm">
+                    <div class="mb-3">
+                      <label class="form-label">环境数据保留天数</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        value="90"
+                        min="30"
+                        max="365"
+                      />
+                      <div class="form-text">建议保留30-365天</div>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">RFID扫描记录保留天数</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        value="180"
+                        min="30"
+                        max="730"
+                      />
+                      <div class="form-text">建议保留30-730天</div>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">告警记录保留天数</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        value="365"
+                        min="90"
+                        max="1095"
+                      />
+                      <div class="form-text">建议保留90-1095天</div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="autoCleanup"
+                          checked
+                        />
+                        <label class="form-check-label" for="autoCleanup">
+                          启用自动清理
+                        </label>
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                      <i class="bi bi-check-circle"></i> 保存配置
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 数据统计 -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-bar-chart"></i> 数据统计</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row text-center">
+                    <div class="col-md-3">
+                      <h6>环境数据记录</h6>
+                      <h3 class="text-primary" id="envDataCount">8,456</h3>
+                      <small>条</small>
+                    </div>
+                    <div class="col-md-3">
+                      <h6>RFID扫描记录</h6>
+                      <h3 class="text-success" id="rfidDataCount">12,345</h3>
+                      <small>条</small>
+                    </div>
+                    <div class="col-md-3">
+                      <h6>告警记录</h6>
+                      <h3 class="text-warning" id="alertDataCount">234</h3>
+                      <small>条</small>
+                    </div>
+                    <div class="col-md-3">
+                      <h6>档案记录</h6>
+                      <h3 class="text-info" id="archiveDataCount">1,567</h3>
+                      <small>条</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 数据导入导出 -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-upload"></i> 数据导入</h5>
+                </div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <label class="form-label">选择导入类型</label>
+                    <select class="form-select" id="importType">
+                      <option value="environment">环境数据</option>
+                      <option value="rfid">RFID数据</option>
+                      <option value="archive">档案数据</option>
+                      <option value="all">全部数据</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">选择文件</label>
+                    <input
+                      type="file"
+                      class="form-control"
+                      accept=".csv,.xlsx,.json"
+                    />
+                  </div>
+                  <button class="btn btn-success" onclick="importData()">
+                    <i class="bi bi-upload"></i> 开始导入
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-download"></i> 数据导出</h5>
+                </div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <label class="form-label">选择导出类型</label>
+                    <select class="form-select" id="exportType">
+                      <option value="environment">环境数据</option>
+                      <option value="rfid">RFID数据</option>
+                      <option value="archive">档案数据</option>
+                      <option value="alert">告警数据</option>
+                      <option value="all">全部数据</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">时间范围</label>
+                    <div class="row">
+                      <div class="col-6">
+                        <input
+                          type="date"
+                          class="form-control"
+                          id="exportStartDate"
+                        />
+                      </div>
+                      <div class="col-6">
+                        <input
+                          type="date"
+                          class="form-control"
+                          id="exportEndDate"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">导出格式</label>
+                    <select class="form-select" id="exportFormat">
+                      <option value="csv">CSV</option>
+                      <option value="xlsx">Excel</option>
+                      <option value="json">JSON</option>
+                    </select>
+                  </div>
+                  <button class="btn btn-primary" onclick="exportData()">
+                    <i class="bi bi-download"></i> 开始导出
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 数据库连接状态 -->
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-hdd-network"></i> 数据库连接状态</h5>
+                </div>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <h6>连接状态</h6>
+                      <p><span class="badge bg-success">已连接</span></p>
+                      <p>数据库类型：<strong>SQLite</strong></p>
+                      <p>数据库版本：<strong>3.36.0</strong></p>
+                    </div>
+                    <div class="col-md-4">
+                      <h6>性能指标</h6>
+                      <p>查询响应时间：<strong>15ms</strong></p>
+                      <p>活跃连接数：<strong>3</strong></p>
+                      <p>缓存命中率：<strong>95.2%</strong></p>
+                    </div>
+                    <div class="col-md-4">
+                      <h6>存储信息</h6>
+                      <p>数据文件大小：<strong>125 MB</strong></p>
+                      <p>索引大小：<strong>8.5 MB</strong></p>
+                      <p>可用空间：<strong>2.3 GB</strong></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 系统配置页面 -->
+        <div id="settings-page" class="page-content" style="display: none">
+          <div class="row">
+            <div class="col-12">
+              <h2><i class="bi bi-gear"></i> 系统配置</h2>
+            </div>
+          </div>
+
+          <!-- 系统配置 -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h5><i class="bi bi-gear"></i> 系统配置</h5>
+                </div>
+                <div class="card-body">
+                  <form id="systemSettingsForm">
+                    <div class="row">
+                      <!-- 基本设置 -->
+                      <div class="col-md-4">
+                        <h6 class="mb-3">
+                          <i class="bi bi-sliders"></i> 基本设置
+                        </h6>
+                        <div class="mb-2">
+                          <label class="form-label form-label-sm"
+                            >管理员邮箱</label
+                          >
+                          <input
+                            type="email"
+                            class="form-control form-control-sm"
+                            value="admin@example.com"
+                          />
+                        </div>
+                        <div class="mb-2">
+                          <label class="form-label form-label-sm"
+                            >数据保留天数</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control form-control-sm"
+                            value="365"
+                          />
+                        </div>
+                        <div class="mb-2">
+                          <label class="form-label form-label-sm"
+                            >时区设置</label
+                          >
+                          <select class="form-select form-select-sm">
+                            <option selected>Asia/Shanghai</option>
+                            <option>UTC</option>
+                            <option>America/New_York</option>
+                          </select>
+                        </div>
+                        <div class="mb-3">
+                          <div class="form-check form-switch">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              checked
+                            />
+                            <label class="form-check-label">启用自动备份</label>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- 网络设置 -->
+                      <div class="col-md-4">
+                        <h6 class="mb-3">
+                          <i class="bi bi-wifi"></i> 网络设置
+                        </h6>
+                        <div class="row">
+                          <div class="col-6">
+                            <div class="mb-2">
+                              <label class="form-label form-label-sm"
+                                >服务器IP</label
+                              >
+                              <input
+                                type="text"
+                                class="form-control form-control-sm"
+                                value="127.0.0.1"
+                              />
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="mb-2">
+                              <label class="form-label form-label-sm"
+                                >端口</label
+                              >
+                              <input
+                                type="number"
+                                class="form-control form-control-sm"
+                                value="5000"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="mb-2">
+                          <label class="form-label form-label-sm"
+                            >代理服务器</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control form-control-sm"
+                            placeholder="http://proxy.example.com:8080"
+                          />
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label form-label-sm"
+                            >DNS服务器</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control form-control-sm"
+                            value="8.8.8.8"
+                          />
+                        </div>
+                      </div>
+
+                      <!-- 安全设置 -->
+                      <div class="col-md-4">
+                        <h6 class="mb-3">
+                          <i class="bi bi-shield-check"></i> 安全设置
+                        </h6>
+                        <div class="mb-2">
+                          <label class="form-label form-label-sm"
+                            >登录超时（分钟）</label
+                          >
+                          <input
+                            type="number"
+                            class="form-control form-control-sm"
+                            value="30"
+                          />
+                        </div>
+                        <div class="mb-2">
+                          <label class="form-label form-label-sm"
+                            >密码复杂度</label
+                          >
+                          <select class="form-select form-select-sm">
+                            <option>简单</option>
+                            <option selected>中等</option>
+                            <option>复杂</option>
+                          </select>
+                        </div>
+                        <div class="mb-2">
+                          <div class="form-check">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              checked
+                            />
+                            <label class="form-check-label">IP白名单</label>
+                          </div>
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" />
+                            <label class="form-check-label">双因子认证</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 统一保存按钮 -->
+          <div class="row">
+            <div class="col-12 text-center">
+              <button
+                type="button"
+                class="btn btn-success"
+                onclick="saveAllSettings()"
+              >
+                <i class="bi bi-check-circle"></i> 保存所有配置
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 模态框 -->
+    <!-- 添加传感器模态框 -->
+    <div class="modal fade" id="addSensorModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">添加传感器</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addSensorForm">
+              <div class="mb-3">
+                <label class="form-label">传感器ID</label>
+                <input type="text" class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">安装位置</label>
+                <input type="text" class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">通信方式</label>
+                <select class="form-select">
+                  <option>串口通信</option>
+                  <option>网络通信</option>
+                  <option>无线通信</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              取消
+            </button>
+            <button type="button" class="btn btn-primary" onclick="addSensor()">
+              添加
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 添加RFID设备模态框 -->
+    <div class="modal fade" id="addRfidDeviceModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">添加RFID设备</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addRfidDeviceForm">
+              <div class="mb-3">
+                <label class="form-label">设备名称</label>
+                <input type="text" class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">设备类型</label>
+                <select class="form-select">
+                  <option>固定式读写器</option>
+                  <option>手持式读写器</option>
+                  <option>门禁式读写器</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">安装位置</label>
+                <input type="text" class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">IP地址</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="192.168.1.100"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              取消
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="addRfidDevice()"
+            >
+              添加
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 添加RFID标签模态框 -->
+    <div class="modal fade" id="addTagModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">添加RFID标签</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addTagForm">
+              <div class="mb-3">
+                <label class="form-label">标签ID</label>
+                <input type="text" class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">关联档案编号</label>
+                <input type="text" class="form-control" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">标签类型</label>
+                <select class="form-select">
+                  <option>档案标签</option>
+                  <option>设备标签</option>
+                  <option>位置标签</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              取消
+            </button>
+            <button type="button" class="btn btn-primary" onclick="addTag()">
+              添加
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 添加档案模态框 -->
+    <div class="modal fade" id="addArchiveModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">添加档案</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addArchiveForm">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">档案编号</label>
+                    <input type="text" class="form-control" required />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">档案标题</label>
+                    <input type="text" class="form-control" required />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">档案类别</label>
+                    <select class="form-select">
+                      <option>人事档案</option>
+                      <option>财务档案</option>
+                      <option>项目档案</option>
+                      <option>合同档案</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">RFID标签ID</label>
+                    <input type="text" class="form-control" />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">存放位置</label>
+                    <select class="form-select">
+                      <option>档案室A区</option>
+                      <option>档案室B区</option>
+                      <option>档案室C区</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">创建人</label>
+                    <input type="text" class="form-control" />
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">档案描述</label>
+                <textarea class="form-control" rows="3"></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              取消
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="addArchive()"
+            >
+              添加
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 告警规则配置模态框 -->
+    <div class="modal fade" id="alertRuleModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">告警规则配置</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <h6>环境阈值告警</h6>
+                <div class="mb-3">
+                  <label class="form-label">温度告警阈值</label>
+                  <div class="row">
+                    <div class="col-6">
+                      <input
+                        type="number"
+                        class="form-control"
+                        placeholder="最低温度"
+                        value="18"
+                      />
+                    </div>
+                    <div class="col-6">
+                      <input
+                        type="number"
+                        class="form-control"
+                        placeholder="最高温度"
+                        value="25"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">湿度告警阈值</label>
+                  <div class="row">
+                    <div class="col-6">
+                      <input
+                        type="number"
+                        class="form-control"
+                        placeholder="最低湿度"
+                        value="40"
+                      />
+                    </div>
+                    <div class="col-6">
+                      <input
+                        type="number"
+                        class="form-control"
+                        placeholder="最高湿度"
+                        value="60"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <h6>档案异常告警</h6>
+                <div class="mb-3">
+                  <label class="form-label">档案缺失检测时间（小时）</label>
+                  <input type="number" class="form-control" value="24" />
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">异常移动检测</label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" checked />
+                    <label class="form-check-label">启用异常移动检测</label>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">通知方式</label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" checked />
+                    <label class="form-check-label">系统通知</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" />
+                    <label class="form-check-label">邮件通知</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" />
+                    <label class="form-check-label">短信通知</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              取消
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="saveAlertRules()"
+            >
+              保存
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 添加维护计划模态框 -->
+    <div class="modal fade" id="addMaintenanceModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">添加维护计划</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addMaintenanceForm">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">设备类型</label>
+                    <select class="form-select" name="device_type" required>
+                      <option value="">选择设备类型</option>
+                      <option value="sensor">传感器</option>
+                      <option value="rfid">RFID设备</option>
+                      <option value="network">网络设备</option>
+                      <option value="server">服务器</option>
+                      <option value="other">其他设备</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">设备名称</label>
+                    <input type="text" class="form-control" name="device_name" required />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">维护类型</label>
+                    <select class="form-select" name="maintenance_type" required>
+                      <option value="">选择维护类型</option>
+                      <option value="routine">定期检查</option>
+                      <option value="preventive">预防性维护</option>
+                      <option value="corrective">故障维修</option>
+                      <option value="upgrade">设备升级</option>
+                      <option value="calibration">设备校准</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">计划日期</label>
+                    <input type="datetime-local" class="form-control" name="scheduled_date" required />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">负责技术员</label>
+                    <input type="text" class="form-control" name="technician" />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">预估费用（元）</label>
+                    <input type="number" class="form-control" name="cost" min="0" step="0.01" />
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">维护描述</label>
+                <textarea class="form-control" name="description" rows="3" required></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              取消
+            </button>
+            <button type="submit" form="addMaintenanceForm" class="btn btn-primary">
+              添加计划
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 自定义脚本 -->
+    <script src="js/api.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
+                  <option value="network">网络设备</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">设备名称</label>
+                <input type="text" class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">维护类型</label>
+                <select class="form-select" required>
+                  <option value="">选择维护类型</option>
+                  <option value="routine">定期检查</option>
+                  <option value="repair">故障维修</option>
+                  <option value="upgrade">设备升级</option>
+                  <option value="cleaning">清洁保养</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">计划日期</label>
+                <input type="date" class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">负责人</label>
+                <input type="text" class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">维护内容</label>
+                <textarea
+                  class="form-control"
+                  rows="3"
+                  placeholder="详细描述维护内容..."
+                ></textarea>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">预估费用</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  placeholder="0.00"
+                  step="0.01"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              取消
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              onclick="addMaintenance()"
+            >
+              添加
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 自定义脚本 -->
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
+                      <option value="rfid">RFID设备</option>
+                      <option value="sensor">传感器</option>
+                      <option value="network">网络设备</option>
+                      <option value="server">服务器</option>
+                      <option value="other">其他设备</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">设备名称</label>
+                    <input type="text" class="form-control" name="device_name" required />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">维护类型</label>
+                    <select class="form-select" name="maintenance_type" required>
+                      <option value="">选择维护类型</option>
+                      <option value="routine">定期检查</option>
+                      <option value="preventive">预防性维护</option>
+                      <option value="corrective">故障维修</option>
+                      <option value="upgrade">设备升级</option>
+                      <option value="calibration">设备校准</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">计划日期</label>
+                    <input type="datetime-local" class="form-control" name="scheduled_date" required />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label class="form-label">负责技术员</label>
+                    <input type="text" class="form-control" name="technician" required />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">预估费用</label>
+                    <input type="number" class="form-control" name="cost" min="0" step="0.01" />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">维护描述</label>
+                    <textarea class="form-control" name="description" rows="3" required></textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">备注</label>
+                    <textarea class="form-control" name="notes" rows="2"></textarea>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              取消
+            </button>
+            <button type="button" class="btn btn-primary" onclick="addMaintenanceRecord()">
+              添加
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- 自定义脚本 -->
+    <script src="js/charts.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

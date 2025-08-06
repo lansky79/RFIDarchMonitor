@@ -1,0 +1,1698 @@
+/* 档案库房智能监测系统 - 左侧导航栏样式 */
+
+/* 全局样式重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Microsoft YaHei", "Segoe UI", Tahoma, Geneva, Verdana,
+    sans-serif;
+  background-color: #f8f9fa;
+  overflow-x: hidden;
+}
+
+/* 应用容器 */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* 左侧导航栏样式 */
+.sidebar {
+  width: 250px;
+  background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+  color: white;
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar.collapsed {
+  width: 60px;
+}
+
+/* 侧边栏头部 */
+.sidebar-header {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 70px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.brand i {
+  font-size: 1.5rem;
+  margin-right: 0.75rem;
+  color: #3498db;
+  flex-shrink: 0;
+}
+
+.brand-text {
+  transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed .brand-text {
+  opacity: 0;
+  width: 0;
+}
+
+.sidebar-toggle {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 导航菜单样式 */
+.sidebar-nav {
+  flex: 1;
+  padding: 1rem 0;
+  overflow-y: auto;
+}
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  margin-bottom: 0.25rem;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border-radius: 0;
+  position: relative;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  text-decoration: none;
+}
+
+.nav-link.active {
+  background-color: #3498db;
+  color: white;
+}
+
+.nav-link.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background-color: #ecf0f1;
+}
+
+.nav-link i {
+  font-size: 1.1rem;
+  margin-right: 0.75rem;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.nav-text {
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sidebar.collapsed .nav-text {
+  opacity: 0;
+  width: 0;
+}
+
+.sidebar.collapsed .nav-link {
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.sidebar.collapsed .nav-link i {
+  margin-right: 0;
+}
+
+/* 侧边栏底部状态 */
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.status-item:last-child {
+  margin-bottom: 0;
+}
+
+.status-item i {
+  margin-right: 0.5rem;
+}
+
+.sidebar.collapsed .status-item {
+  justify-content: center;
+}
+
+.sidebar.collapsed .status-item span:not(.badge) {
+  display: none;
+}
+
+.sidebar.collapsed .status-item i {
+  margin-right: 0;
+}
+
+/* 主内容区域样式 */
+.main-content {
+  flex: 1;
+  margin-left: 250px;
+  padding: 2rem;
+  transition: margin-left 0.3s ease;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.sidebar.collapsed + .main-content {
+  margin-left: 60px;
+}
+
+/* 页面内容样式 */
+.page-content {
+  display: none;
+}
+
+.page-content.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 卡片样式优化 */
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  font-weight: 600;
+}
+
+/* 状态卡片样式 */
+.card.bg-primary,
+.card.bg-success,
+.card.bg-info,
+.card.bg-warning {
+  border: none;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+.card.bg-primary:hover,
+.card.bg-success:hover,
+.card.bg-info:hover,
+.card.bg-warning:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+}
+
+/* 状态指示器样式 */
+.status-indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.status-online {
+  background-color: #28a745;
+  animation: pulse 2s infinite;
+}
+
+.status-offline {
+  background-color: #dc3545;
+}
+
+.status-warning {
+  background-color: #ffc107;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* 表格样式优化 */
+.table {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.table thead th {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+  font-weight: 600;
+  border-top: none;
+  color: #495057;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* 按钮样式优化 */
+.btn {
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+}
+
+/* 表单样式 */
+.form-control,
+.form-select {
+  border-radius: 0.375rem;
+  border: 1px solid #ced4da;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+}
+
+/* 告警样式 */
+.alert {
+  border: none;
+  border-radius: 0.5rem;
+  border-left: 4px solid;
+}
+
+.alert-item {
+  border-left: 4px solid;
+  padding-left: 15px;
+}
+
+.alert-item.alert-warning,
+.alert.alert-warning {
+  border-left-color: #ffc107;
+}
+
+.alert-item.alert-danger,
+.alert.alert-danger {
+  border-left-color: #dc3545;
+}
+
+.alert-item.alert-info,
+.alert.alert-info {
+  border-left-color: #17a2b8;
+}
+
+.alert.alert-success {
+  border-left-color: #198754;
+}
+
+/* 图表容器样式 */
+.chart-container {
+  position: relative;
+  height: 300px;
+  margin: 20px 0;
+}
+
+/* 徽章样式 */
+.badge {
+  font-weight: 500;
+  font-size: 0.75rem;
+  padding: 0.35em 0.65em;
+}
+
+/* 加载动画 */
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 数据展示样式 */
+.data-value {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.data-label {
+  font-size: 0.875rem;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+}
+
+.data-unit {
+  font-size: 1rem;
+  color: #6c757d;
+  margin-left: 0.25rem;
+}
+
+/* 工具栏样式 */
+.toolbar {
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.toolbar .btn {
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* 搜索框样式 */
+.search-box {
+  position: relative;
+}
+
+.search-box .form-control {
+  padding-left: 2.5rem;
+}
+
+.search-box .search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6c757d;
+}
+
+/* 分页样式 */
+.pagination {
+  margin-bottom: 0;
+}
+
+.page-link {
+  border-radius: 0.375rem;
+  margin: 0 0.125rem;
+  border: 1px solid #dee2e6;
+}
+
+.page-link:hover {
+  background-color: #e9ecef;
+}
+
+/* 模态框样式 */
+.modal-content {
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  border-bottom: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+}
+
+/* 数据采集页面特定样式 */
+#collection-page .card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#collection-page .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 250px;
+  }
+
+  .sidebar.show {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 1rem;
+  }
+
+  .sidebar.collapsed + .main-content {
+    margin-left: 0;
+  }
+
+  /* 移动端显示切换按钮 */
+  .mobile-toggle {
+    display: block;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1001;
+    background: #2c3e50;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .card-body h3 {
+    font-size: 1.5rem;
+  }
+
+  .data-value {
+    font-size: 1.5rem;
+  }
+
+  .chart-container {
+    height: 250px;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-toggle {
+    display: none;
+  }
+}
+
+/* 平板设备适配 */
+@media (max-width: 992px) and (min-width: 769px) {
+  .sidebar {
+    width: 200px;
+  }
+
+  .main-content {
+    margin-left: 200px;
+  }
+
+  .sidebar.collapsed {
+    width: 60px;
+  }
+
+  .sidebar.collapsed + .main-content {
+    margin-left: 60px;
+  }
+}
+
+/* 大屏幕优化 */
+@media (min-width: 1400px) {
+  .sidebar {
+    width: 280px;
+  }
+
+  .main-content {
+    margin-left: 280px;
+  }
+
+  .sidebar.collapsed + .main-content {
+    margin-left: 60px;
+  }
+}
+
+@media (max-width: 576px) {
+  .main-content {
+    padding: 0.5rem;
+  }
+
+  .card {
+    margin-bottom: 1rem;
+  }
+
+  .toolbar {
+    text-align: center;
+  }
+
+  .toolbar .btn {
+    width: 100%;
+    margin-right: 0;
+  }
+}
+
+/* 滚动条样式 */
+.sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* 工具提示样式（折叠状态下显示） */
+.sidebar.collapsed .nav-link {
+  position: relative;
+}
+
+.sidebar.collapsed .nav-link:hover::after {
+  content: attr(title);
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #2c3e50;
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  white-space: nowrap;
+  z-index: 1000;
+  margin-left: 0.5rem;
+  font-size: 0.875rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 打印样式 */
+@media print {
+  .sidebar,
+  .toolbar,
+  .btn,
+  .pagination {
+    display: none !important;
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+    padding: 0 !important;
+  }
+
+  .card {
+    border: 1px solid #000 !important;
+    box-shadow: none !important;
+  }
+
+  .page-content {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+/* 过渡动画 */
+* {
+  transition: all 0.2s ease;
+}
+/* ==================== 时间线样式 ==================== */
+.timeline {
+  position: relative;
+  padding-left: 30px;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #dee2e6;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -22px;
+  top: 5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px #dee2e6;
+}
+
+.timeline-content {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 3px solid #007bff;
+}
+
+.timeline-content h6 {
+  margin-bottom: 5px;
+  color: #495057;
+}
+
+/* ==================== 位置统计样式 ==================== */
+.location-stats .progress {
+  height: 8px;
+}
+
+/* ==================== 表格样式增强 ==================== */
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+.table-danger {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+
+.table-warning {
+  background-color: rgba(255, 193, 7, 0.1);
+}
+
+/* ==================== 卡片样式增强 ==================== */
+.card {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  transition: box-shadow 0.15s ease-in-out;
+}
+
+.card:hover {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+/* ==================== 进度条样式 ==================== */
+.progress {
+  height: 10px;
+  border-radius: 5px;
+}
+
+.progress-bar {
+  border-radius: 5px;
+}
+
+/* ==================== 徽章样式增强 ==================== */
+.badge {
+  font-size: 0.75em;
+  padding: 0.35em 0.65em;
+}
+
+/* ==================== 按钮组样式 ==================== */
+.btn-group-sm > .btn,
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  border-radius: 0.2rem;
+}
+
+/* ==================== 模态框样式增强 ==================== */
+.modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modal-footer {
+  background-color: #f8f9fa;
+  border-top: 1px solid #dee2e6;
+}
+
+/* ==================== 表单样式增强 ==================== */
+.form-control:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-select:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* ==================== 开关样式 ==================== */
+.form-check-input:checked {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.form-switch .form-check-input {
+  width: 2em;
+  margin-left: -2.5em;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%280,0,0,.25%29'/%3e%3c/svg%3e");
+  background-position: left center;
+  border-radius: 2em;
+  transition: background-position 0.15s ease-in-out;
+}
+
+/* ==================== 滑块样式 ==================== */
+.form-range {
+  width: 100%;
+  height: 1.5rem;
+  padding: 0;
+  background-color: transparent;
+  appearance: none;
+}
+
+.form-range::-webkit-slider-track {
+  width: 100%;
+  height: 0.5rem;
+  color: transparent;
+  cursor: pointer;
+  background-color: #dee2e6;
+  border-color: transparent;
+  border-radius: 1rem;
+}
+
+.form-range::-webkit-slider-thumb {
+  width: 1rem;
+  height: 1rem;
+  margin-top: -0.25rem;
+  background-color: #007bff;
+  border: 0;
+  border-radius: 1rem;
+  cursor: pointer;
+  appearance: none;
+}
+
+/* ==================== 告警样式 ==================== */
+.alert-sm {
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* ==================== 状态指示器 ==================== */
+.status-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.status-indicator.online {
+  background-color: #28a745;
+}
+
+.status-indicator.offline {
+  background-color: #dc3545;
+}
+
+.status-indicator.warning {
+  background-color: #ffc107;
+}
+
+/* ==================== 数据卡片样式 ==================== */
+.data-card {
+  text-align: center;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.data-card h3 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.data-card p {
+  margin-bottom: 0;
+  opacity: 0.9;
+}
+
+/* ==================== 响应式调整 ==================== */
+@media (max-width: 768px) {
+  .timeline {
+    padding-left: 20px;
+  }
+
+  .timeline::before {
+    left: 10px;
+  }
+
+  .timeline-marker {
+    left: -17px;
+  }
+
+  .table-responsive {
+    font-size: 0.875rem;
+  }
+
+  .btn-sm {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* ==================== 动画效果 ==================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* ==================== 加载状态 ==================== */
+.loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==================== 工具提示增强 ==================== */
+.tooltip {
+  font-size: 0.875rem;
+}
+
+.tooltip-inner {
+  max-width: 200px;
+  padding: 0.5rem 0.75rem;
+  color: #fff;
+  text-align: center;
+  background-color: #000;
+  border-radius: 0.375rem;
+}
+
+/* ==================== 自定义滚动条 ==================== */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #007bff #f1f1f1;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #007bff;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #0056b3;
+}
+
+/* ==================== 数据管理页面布局优化 ==================== */
+#data-management-page .row.mb-4 .col-md-6 .card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#data-management-page .row.mb-4 .col-md-6 .card .card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* 数据清理配置卡片优化 */
+#data-management-page .card:has(h5:contains("数据清理配置")) .card-body {
+  padding: 1rem;
+}
+
+#data-management-page .card:has(h5:contains("数据清理配置")) .mb-3 {
+  margin-bottom: 0.75rem !important;
+}
+
+#data-management-page .card:has(h5:contains("数据清理配置")) .form-text {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+/* 数据导出卡片优化 */
+#data-management-page .card:has(h5:contains("数据导出")) .card-body {
+  padding: 1rem;
+}
+
+#data-management-page .card:has(h5:contains("数据导出")) .mb-3 {
+  margin-bottom: 0.75rem !important;
+}
+
+/* 数据导入导出行的卡片等高 */
+#data-management-page
+  .row:has(.card h5:contains("数据导入"), .card h5:contains("数据导出"))
+  .col-md-6
+  .card {
+  height: 100%;
+  min-height: 320px;
+}
+
+/* 数据库维护和数据清理配置行的卡片等高 */
+#data-management-page
+  .row:has(.card h5:contains("数据库维护"), .card h5:contains("数据清理配置"))
+  .col-md-6
+  .card {
+  height: 100%;
+  min-height: 400px;
+}
+/* ==================== UI布局改进的响应式优化 ==================== */
+
+/* 数据采集页面响应式 */
+@media (max-width: 768px) {
+  #collection-page .card[style*="height"] {
+    height: auto !important;
+    min-height: 300px;
+  }
+
+  #collection-page .row .col-md-6 {
+    margin-bottom: 1rem;
+  }
+
+  .form-range {
+    margin-bottom: 1rem;
+  }
+}
+
+/* RFID页面响应式优化 */
+@media (max-width: 768px) {
+  #rfid-page .card[style*="height"] {
+    height: auto !important;
+    min-height: 250px;
+  }
+
+  #rfid-page .table-responsive {
+    font-size: 0.8rem;
+  }
+
+  #rfid-page .btn-sm {
+    padding: 0.15rem 0.3rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* 系统配置页面响应式 */
+@media (max-width: 768px) {
+  #settings-page .col-md-4 {
+    margin-bottom: 1rem;
+  }
+
+  #settings-page .form-control-sm,
+  #settings-page .form-select-sm {
+    font-size: 0.875rem;
+  }
+
+  #settings-page .card-body {
+    padding: 1rem;
+  }
+}
+
+/* 平板设备优化 */
+@media (max-width: 992px) and (min-width: 769px) {
+  .card[style*="height"] {
+    height: auto !important;
+    min-height: 300px;
+  }
+
+  .table-responsive {
+    font-size: 0.9rem;
+  }
+}
+
+/* 小屏幕设备优化 */
+@media (max-width: 576px) {
+  .card {
+    margin-bottom: 1rem;
+  }
+
+  .card-body {
+    padding: 0.75rem;
+  }
+
+  .btn-sm {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .form-control-sm,
+  .form-select-sm {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .table-sm th,
+  .table-sm td {
+    padding: 0.3rem;
+    font-size: 0.75rem;
+  }
+
+  .badge {
+    font-size: 0.65rem;
+    padding: 0.25em 0.5em;
+  }
+}
+
+/* 性能监控卡片响应式 */
+@media (max-width: 768px) {
+  #collection-page .row.text-center .col-4 {
+    margin-bottom: 1rem;
+  }
+
+  #collection-page .row.text-center h4 {
+    font-size: 1.2rem;
+  }
+
+  #collection-page .row.text-center h6 {
+    font-size: 0.9rem;
+  }
+}
+
+/* 仪表盘响应式优化 */
+@media (max-width: 768px) {
+  #dashboard-page .col-md-3 {
+    margin-bottom: 1rem;
+  }
+
+  #dashboard-page .card.bg-primary h3,
+  #dashboard-page .card.bg-success h3,
+  #dashboard-page .card.bg-info h3,
+  #dashboard-page .card.bg-warning h3 {
+    font-size: 1.5rem;
+  }
+
+  #dashboard-page .fs-1 {
+    font-size: 2rem !important;
+  }
+}
+
+/* 表格响应式增强 */
+@media (max-width: 768px) {
+  .table-responsive table {
+    min-width: 600px;
+  }
+
+  .table-responsive {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+  }
+}
+
+/* 导航栏移动端优化 */
+@media (max-width: 768px) {
+  .sidebar {
+    z-index: 1050;
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
+    display: none;
+  }
+
+  .sidebar-overlay.show {
+    display: block;
+  }
+}
+
+/* 打印优化 */
+@media print {
+  .card[style*="height"] {
+    height: auto !important;
+  }
+
+  .btn,
+  .form-control,
+  .form-select {
+    display: none !important;
+  }
+
+  .table {
+    font-size: 0.8rem;
+  }
+}
+
+/* 高分辨率屏幕优化 */
+@media (min-width: 1400px) {
+  .card-body {
+    padding: 1.5rem;
+  }
+
+  .table {
+    font-size: 0.95rem;
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* 横屏模式优化 */
+@media (orientation: landscape) and (max-height: 600px) {
+  .sidebar {
+    width: 200px;
+  }
+
+  .main-content {
+    margin-left: 200px;
+    padding: 1rem;
+  }
+
+  .sidebar.collapsed {
+    width: 50px;
+  }
+
+  .sidebar.collapsed + .main-content {
+    margin-left: 50px;
+  }
+}
+
+/* 触摸设备优化 */
+@media (hover: none) and (pointer: coarse) {
+  .btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .form-control,
+  .form-select {
+    min-height: 44px;
+  }
+
+  .nav-link {
+    min-height: 48px;
+  }
+
+  .table td,
+  .table th {
+    padding: 0.75rem 0.5rem;
+  }
+}
+
+/* 深色模式支持（预留） */
+@media (prefers-color-scheme: dark) {
+  /* 可以在这里添加深色模式样式 */
+}
+
+/* 减少动画（用户偏好） */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+  .card {
+    border: 2px solid #000;
+  }
+
+  .btn {
+    border: 2px solid;
+  }
+
+  .form-control,
+  .form-select {
+    border: 2px solid #000;
+  }
+}
+
+/* ==================== 数据管理页面布局优化 ==================== */
+/* 数据管理页面所有卡片等高 */
+#data-management-page .row.mb-4 {
+  display: flex;
+  align-items: stretch;
+}
+
+#data-management-page .row.mb-4 .col-md-6 {
+  display: flex;
+}
+
+#data-management-page .row.mb-4 .col-md-6 .card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#data-management-page .row.mb-4 .col-md-6 .card .card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 数据清理配置卡片紧凑化 */
+#data-management-page #dataCleanupForm .mb-3 {
+  margin-bottom: 0.75rem !important;
+}
+
+#data-management-page #dataCleanupForm .form-text {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+#data-management-page #dataCleanupForm .form-control {
+  padding: 0.375rem 0.75rem;
+}
+
+#data-management-page #dataCleanupForm .form-check {
+  margin-bottom: 0.5rem;
+}
+
+/* 数据导入导出卡片紧凑化 */
+#data-management-page .card .card-body .mb-3:last-of-type {
+  margin-bottom: 1rem !important;
+}
+
+#data-management-page .card .card-body .btn {
+  margin-top: auto;
+}
+
+/* 确保第一行（数据库维护和数据清理配置）等高 */
+#data-management-page .row.mb-4:first-of-type .col-md-6 .card {
+  min-height: 480px;
+}
+
+/* 确保第三行（数据导入和数据导出）等高 */
+#data-management-page .row.mb-4:nth-of-type(3) .col-md-6 .card {
+  min-height: 380px;
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  #data-management-page .row.mb-4 .col-md-6 .card {
+    min-height: auto !important;
+  }
+
+  #data-management-page .row.mb-4 {
+    display: block;
+  }
+
+  #data-management-page .row.mb-4 .col-md-6 {
+    display: block;
+    margin-bottom: 1rem;
+  }
+}
+/* ==================== 数据管理页面布局优化 ==================== */
+/* 数据管理页面所有卡片等高 */
+#data-management-page .row.mb-4 {
+  display: flex;
+  align-items: stretch;
+}
+
+#data-management-page .row.mb-4 .col-md-6 {
+  display: flex;
+}
+
+#data-management-page .row.mb-4 .col-md-6 .card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#data-management-page .row.mb-4 .col-md-6 .card .card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 数据清理配置卡片紧凑化 */
+#data-management-page #dataCleanupForm .mb-3 {
+  margin-bottom: 0.75rem !important;
+}
+
+#data-management-page #dataCleanupForm .form-text {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+#data-management-page #dataCleanupForm .form-control {
+  padding: 0.375rem 0.75rem;
+}
+
+#data-management-page #dataCleanupForm .form-check {
+  margin-bottom: 0.5rem;
+}
+
+/* 数据导入导出卡片紧凑化 */
+#data-management-page .card .card-body .mb-3:last-of-type {
+  margin-bottom: 1rem !important;
+}
+
+#data-management-page .card .card-body .btn {
+  margin-top: auto;
+}
+
+/* 确保第一行（数据库维护和数据清理配置）等高 */
+#data-management-page .row.mb-4:first-of-type .col-md-6 .card {
+  min-height: 480px;
+}
+
+/* 确保第三行（数据导入和数据导出）等高 */
+#data-management-page .row.mb-4:nth-of-type(3) .col-md-6 .card {
+  min-height: 380px;
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  #data-management-page .row.mb-4 .col-md-6 .card {
+    min-height: auto !important;
+  }
+
+  #data-management-page .row.mb-4 {
+    display: block;
+  }
+
+  #data-management-page .row.mb-4 .col-md-6 {
+    display: block;
+    margin-bottom: 1rem;
+  }
+}
+/* ==================== RFID设备管理页面布局优化 ==================== */
+/* RFID页面左右卡片等高 */
+#rfid-page .row.mb-4 .col-md-6 {
+  display: flex;
+  flex-direction: column;
+}
+
+#rfid-page .row.mb-4 .col-md-6 .card {
+  flex: 1;
+}
+
+/* 左边RFID读写器卡片高度调整 */
+#rfid-page .row.mb-4 .col-md-6:first-child .card {
+  height: 550px !important;
+  min-height: 550px;
+}
+
+/* 右边两个卡片的高度调整 */
+#rfid-page .row.mb-4 .col-md-6:last-child .card:first-child {
+  min-height: 270px;
+  margin-bottom: 1rem;
+}
+
+#rfid-page .row.mb-4 .col-md-6:last-child .card:last-child {
+  min-height: 265px;
+  flex: 1;
+}
+
+/* 确保右边列的总高度与左边一致 */
+#rfid-page .row.mb-4 .col-md-6:last-child {
+  height: 550px;
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  #rfid-page .row.mb-4 .col-md-6:first-child .card {
+    height: auto !important;
+    min-height: 300px;
+  }
+
+  #rfid-page .row.mb-4 .col-md-6:last-child {
+    height: auto;
+  }
+
+  #rfid-page .row.mb-4 .col-md-6:last-child .card {
+    min-height: 200px;
+  }
+}
+/* ==================== RFID设备管理页面布局修正 ==================== */
+/* 重置之前的RFID页面样式 */
+#rfid-page .row.mb-4 .col-md-6 {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+#rfid-page .row.mb-4 .col-md-6 .card {
+  flex: none !important;
+}
+
+/* 左边RFID读写器卡片高度调整 - 与右边两个卡片总高度一致 */
+#rfid-page .row.mb-4 .col-md-6:first-child .card {
+  height: 535px !important;
+  min-height: 535px !important;
+}
+
+/* 右边第一个卡片（实时扫描状态）高度调整 - 压缩高度 */
+#rfid-page .row.mb-4 .col-md-6:last-child .card:first-child {
+  min-height: 180px !important;
+  height: 180px !important;
+  margin-bottom: 1rem !important;
+}
+
+/* 右边第二个卡片（RFID参数配置）高度调整，增加空间给保存按钮 */
+#rfid-page .row.mb-4 .col-md-6:last-child .card:last-child {
+  height: 340px !important;
+  min-height: 340px !important;
+  flex: none !important;
+}
+
+/* 右边RFID参数配置卡片内部布局优化 */
+#rfid-page .row.mb-4 .col-md-6:last-child .card:last-child .card-body {
+  padding-bottom: 1.5rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: calc(100% - 60px) !important; /* 减去header高度 */
+}
+
+#rfid-page
+  .row.mb-4
+  .col-md-6:last-child
+  .card:last-child
+  .card-body
+  .text-center {
+  margin-top: auto !important;
+  padding-top: 1rem !important;
+}
+
+/* 确保右边列的总高度与左边一致 */
+#rfid-page .row.mb-4 .col-md-6:last-child {
+  height: 535px !important;
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  #rfid-page .row.mb-4 .col-md-6:first-child .card {
+    height: auto !important;
+    min-height: 300px !important;
+  }
+
+  #rfid-page .row.mb-4 .col-md-6:last-child {
+    height: auto !important;
+  }
+
+  #rfid-page .row.mb-4 .col-md-6:last-child .card {
+    height: auto !important;
+    min-height: 200px !important;
+  }
+
+  #rfid-page .row.mb-4 .col-md-6:last-child .card:last-child .card-body {
+    height: auto !important;
+  }
+}
+/* 实时扫描状态卡片内容紧凑布局 - 四个指标一行显示 */
+#rfid-page .row.mb-4 .col-md-6:last-child .card:first-child .card-body {
+  padding: 1rem !important;
+}
+
+#rfid-page .row.mb-4 .col-md-6:last-child .card:first-child .row.text-center {
+  margin-bottom: 0 !important;
+}
+
+#rfid-page .row.mb-4 .col-md-6:last-child .card:first-child .col-6 {
+  flex: 0 0 25% !important;
+  max-width: 25% !important;
+  padding: 0.5rem !important;
+}
+
+#rfid-page .row.mb-4 .col-md-6:last-child .card:first-child h6 {
+  font-size: 0.8rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+#rfid-page .row.mb-4 .col-md-6:last-child .card:first-child h3,
+#rfid-page .row.mb-4 .col-md-6:last-child .card:first-child h4 {
+  font-size: 1.5rem !important;
+  margin-bottom: 0.25rem !important;
+}
+
+#rfid-page .row.mb-4 .col-md-6:last-child .card:first-child small {
+  font-size: 0.7rem !important;
+}
+
+/* RFID参数配置卡片内部布局优化 - 确保保存按钮在卡片内 */
+#rfid-page .row.mb-4 .col-md-6:last-child .card:last-child .card-body {
+  padding: 1rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: calc(100% - 60px) !important;
+}
+
+#rfid-page
+  .row.mb-4
+  .col-md-6:last-child
+  .card:last-child
+  .card-body
+  .text-center {
+  margin-top: auto !important;
+  padding-top: 1rem !important;
+  padding-bottom: 0.5rem !important;
+}
+/* ==================== 智能盘点页面布局优化 ==================== */
+/* 智能盘点页面左右卡片等高 */
+#inventory-page .row.mb-4:first-of-type .col-md-8,
+#inventory-page .row.mb-4:first-of-type .col-md-4 {
+  display: flex;
+  flex-direction: column;
+}
+
+#inventory-page .row.mb-4:first-of-type .col-md-8 .card,
+#inventory-page .row.mb-4:first-of-type .col-md-4 .card {
+  flex: 1;
+  height: 100%;
+}
+
+/* 确保左右卡片等高 */
+#inventory-page .row.mb-4:first-of-type {
+  display: flex;
+  align-items: stretch;
+}
+
+/* 盘点进度卡片内容居中 */
+#inventory-page .row.mb-4:first-of-type .col-md-4 .card .card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 200px;
+}
+
+/* 响应式优化 */
+@media (max-width: 768px) {
+  #inventory-page .row.mb-4:first-of-type {
+    display: block;
+  }
+
+  #inventory-page .row.mb-4:first-of-type .col-md-8,
+  #inventory-page .row.mb-4:first-of-type .col-md-4 {
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  #inventory-page .row.mb-4:first-of-type .col-md-4 .card .card-body {
+    min-height: auto;
+  }
+}
