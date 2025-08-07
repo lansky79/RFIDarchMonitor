@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API修复测试</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .result {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+      }
+      .error {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+      .info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>API修复测试页面</h1>
+    <div id="results"></div>
+
+    <script src="frontend/js/api.js"></script>
+    <script>
+      const results = document.getElementById("results");
+
+      function addResult(message, type = "info") {
+        const div = document.createElement("div");
+        div.className = `result ${type}`;
+        div.textContent = message;
+        results.appendChild(div);
+      }
+
+      // 测试API客户端加载
+      try {
+        addResult("开始测试API客户端...", "info");
+
+        // 测试1: 检查ApiClient类是否存在
+        if (typeof window.ApiClient !== "undefined") {
+          addResult("✓ window.ApiClient类已定义", "success");
+        } else {
+          addResult("✗ window.ApiClient类未定义", "error");
+        }
+
+        // 测试2: 检查api实例是否存在
+        if (typeof window.api !== "undefined") {
+          addResult("✓ window.api实例已创建", "success");
+        } else {
+          addResult("✗ window.api实例未创建", "error");
+        }
+
+        // 测试3: 检查api实例的方法
+        if (window.api && typeof window.api.getSystemHealth === "function") {
+          addResult("✓ getSystemHealth方法存在", "success");
+        } else {
+          addResult("✗ getSystemHealth方法不存在", "error");
+        }
+
+        addResult("API客户端测试完成", "info");
+      } catch (error) {
+        addResult("测试过程中出现错误: " + error.message, "error");
+        console.error("测试错误:", error);
+      }
+    </script>
+  </body>
+</html>

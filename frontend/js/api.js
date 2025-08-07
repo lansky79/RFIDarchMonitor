@@ -4,8 +4,8 @@
  */
 
 // 避免重复声明
-if (typeof ApiClient === "undefined") {
-  class ApiClient {
+if (typeof window.ApiClient === "undefined") {
+  window.ApiClient = class ApiClient {
     constructor() {
       this.baseUrl = "http://127.0.0.1:5000/api";
       this.timeout = 10000; // 10秒超时
@@ -407,10 +407,10 @@ if (typeof ApiClient === "undefined") {
     async updateSystemConfig(config) {
       return this.post("/settings/config", config);
     }
-  }
+  };
 }
 
 // 创建全局API客户端实例
 if (typeof window.api === "undefined") {
-  window.api = new ApiClient();
+  window.api = new window.ApiClient();
 }

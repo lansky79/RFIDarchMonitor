@@ -71,7 +71,7 @@ async function initializeApp() {
  */
 async function checkSystemHealth() {
   try {
-    const health = await api.getSystemHealth();
+    const health = await window.api.getSystemHealth();
     console.log("系统健康检查:", health);
 
     if (health.status === "healthy") {
@@ -92,7 +92,7 @@ async function checkSystemHealth() {
  */
 async function loadSystemInfo() {
   try {
-    const info = await api.getSystemInfo();
+    const info = await window.api.getSystemInfo();
     console.log("系统信息:", info);
 
     window.systemData.info = info;
@@ -219,7 +219,7 @@ async function loadAlertCount() {
  */
 async function loadSystemPerformance() {
   try {
-    const response = await api.getSystemPerformance();
+    const response = await window.api.getSystemPerformance();
 
     if (response.success && response.data) {
       const data = response.data;
@@ -1139,26 +1139,7 @@ window.addEventListener("beforeunload", function () {
 
 // 这些函数在文件后面有完整实现，这里删除重复声明
 
-/**
- * 加载RFID数据
- */
-function loadRfidData() {
-  console.log("加载RFID数据");
-}
-
-/**
- * 加载追踪数据
- */
-function loadTrackingData() {
-  console.log("加载追踪数据");
-}
-
-/**
- * 高级搜索
- */
-function advancedSearch() {
-  console.log("执行高级搜索");
-}
+// 删除重复的简单函数声明
 
 /**
  * 保存告警规则
@@ -1238,7 +1219,7 @@ async function loadMaintenanceData() {
  */
 async function loadMaintenanceStatistics() {
   try {
-    const response = await api.get("/maintenance/statistics");
+    const response = await window.api.get("/maintenance/statistics");
 
     if (response.success) {
       const stats = response.data;
@@ -1288,7 +1269,7 @@ async function loadMaintenanceRecords(page = 1) {
     if (status) params.status = status;
     if (keyword) params.keyword = keyword;
 
-    const response = await api.get("/maintenance/records", params);
+    const response = await window.api.get("/maintenance/records", params);
 
     if (response.success) {
       displayMaintenanceRecords(response.data.records);

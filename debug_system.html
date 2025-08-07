@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统调试页面</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>档案库房智能监测系统 - 调试页面</h1>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>系统状态检查</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="status-results"></div>
+                        <button class="btn btn-primary" onclick="checkSystemStatus()">检查系统状态</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>采集频率设置</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="collection-results"></div>
+                        <button class="btn btn-success" onclick="checkCollectionConfig()">检查采集配置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>API测试结果</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="api-results"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="frontend/js/api.js"></script>
+    <script>
+        function addResult(containerId, message, type = 'info') {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = `alert alert-${type} alert-sm`;
+            div.innerHTML = message;
+            container.appendChild(div);
+        }
+        
+        async function checkSystemStatus() {
+            const container = document.getElementById('status-results');
+            container.innerHTML = '';
+            
+            try {
+                // 检查API客户端
+                if (typeof window.api === 'undefined') {
+                    addResult('status-results', '❌ API客户端未加载', 'danger');
+                    return;
+                }
+                addResult('status-results', '✅ API客户端已加载', 'success');
+                
+                // 检查健康状态
+                const health = await window.api.getSystemHealth();
+                addResult('status-results', `✅ 健康检查: ${JSON.stringify(health)}`, 'success');
+                
+                // 检查系统信息
+                const info = await window.api.getSystemInfo();
+                addResult('status-results', '✅ 系统信息获取成功', 'success');
+                
+            } catch (error) {
+                addResult('status-results', `❌ 系统检查失败: ${error.message}`, 'danger');
+                console.error('系统检查错误:', error);
+            }
+        }
+        
+        async function checkCollectionConfig() {
+            const container = document.getElementById('collection-results');
+            container.innerHTML = '';
+            
+            try {
+                // 检查采集配置AP
