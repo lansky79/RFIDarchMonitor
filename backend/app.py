@@ -20,6 +20,7 @@ from api.collection_api import collection_bp
 from api.collection_status_api import collection_status_bp
 from api.system_performance_api import system_performance_bp
 from api.maintenance_api import maintenance_bp
+from api.auth_api import auth_bp
 
 # 导入服务
 from services.hardware_service import hardware_service
@@ -37,6 +38,7 @@ app.register_blueprint(collection_bp)
 app.register_blueprint(collection_status_bp)
 app.register_blueprint(system_performance_bp)
 app.register_blueprint(maintenance_bp)
+app.register_blueprint(auth_bp, url_prefix='/api/auth')
 
 # 配置日志
 import os
@@ -57,6 +59,10 @@ logger = logging.getLogger(__name__)
 # 静态文件服务 - 为前端提供静态文件
 @app.route('/')
 def index():
+    return send_from_directory('..', 'login.html')
+
+@app.route('/main')
+def main():
     return send_from_directory('../frontend', 'index.html')
 
 @app.route('/<path:filename>')

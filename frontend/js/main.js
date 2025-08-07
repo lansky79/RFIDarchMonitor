@@ -460,6 +460,39 @@ function showSuccessMessage(message) {
 }
 
 /**
+ * 用户退出登录
+ */
+async function logout() {
+  if (confirm("确定要退出系统吗？")) {
+    try {
+      // 尝试调用后端登出API
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        showSuccessMessage("已成功退出系统");
+      }
+    } catch (error) {
+      console.log("后端登出API调用失败，执行前端登出");
+    }
+
+    // 清除本地存储的登录信息
+    localStorage.removeItem("userToken");
+    localStorage.removeItem("userName");
+    sessionStorage.clear();
+
+    // 延迟跳转到登录页面
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 1000);
+  }
+}
+
+/**
  * 格式化文件大小
  * @param {number} bytes - 字节数
  * @returns {string} 格式化后的大小
@@ -747,6 +780,30 @@ async function loadReportsData() {
   } catch (error) {
     console.error("加载报表页面失败:", error);
     showErrorMessage("加载报表数据失败");
+  }
+}
+
+/**
+ * 加载智能盘点页面数据
+ */
+async function loadInventoryData() {
+  try {
+    console.log("加载智能盘点数据");
+    // 这里可以添加具体的盘点数据加载逻辑
+  } catch (error) {
+    console.error("加载盘点数据失败:", error);
+  }
+}
+
+/**
+ * 加载告警管理页面数据
+ */
+async function loadAlertsData() {
+  try {
+    console.log("加载告警管理数据");
+    // 这里可以添加具体的告警数据加载逻辑
+  } catch (error) {
+    console.error("加载告警数据失败:", error);
   }
 }
 
@@ -1928,6 +1985,12 @@ function initEnvironmentChart() {
     );
   }
 
+  // 检查Chart.js是否已加载
+  if (typeof Chart === "undefined") {
+    console.warn("Chart.js未加载，跳过图表初始化");
+    return;
+  }
+
   window.environmentChart = new Chart(ctx, {
     type: "line",
     data: {
@@ -2039,6 +2102,12 @@ function initArchiveChart() {
       "rgb(153, 102, 255)",
     ],
   };
+
+  // 检查Chart.js是否已加载
+  if (typeof Chart === "undefined") {
+    console.warn("Chart.js未加载，跳过图表初始化");
+    return;
+  }
 
   window.archiveChart = new Chart(ctx, {
     type: "doughnut",

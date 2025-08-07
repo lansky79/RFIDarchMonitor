@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>简单连接测试</title>
+  </head>
+  <body>
+    <h1>连接测试</h1>
+    <div id="status">正在测试...</div>
+
+    <script src="frontend/js/api.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const statusDiv = document.getElementById("status");
+
+        try {
+          // 检查ApiClient是否定义
+          if (typeof window.ApiClient !== "undefined") {
+            statusDiv.innerHTML += "<br>✓ ApiClient已定义";
+          } else {
+            statusDiv.innerHTML += "<br>✗ ApiClient未定义";
+          }
+
+          // 检查api实例是否创建
+          if (typeof window.api !== "undefined") {
+            statusDiv.innerHTML += "<br>✓ window.api实例已创建";
+          } else {
+            statusDiv.innerHTML += "<br>✗ window.api实例未创建";
+          }
+
+          statusDiv.innerHTML +=
+            "<br><br>测试完成！如果看到两个✓，说明JavaScript错误已修复。";
+        } catch (error) {
+          statusDiv.innerHTML += "<br>✗ 错误: " + error.message;
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>函数测试</title>
+  </head>
+  <body>
+    <h1>函数存在性测试</h1>
+    <div id="results"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="frontend/js/api.js"></script>
+    <script src="frontend/js/main.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const results = document.getElementById("results");
+
+        // 测试函数是否存在
+        const functions = [
+          "showPage",
+          "loadInventoryData",
+          "loadAlertsData",
+          "initEnvironmentChart",
+        ];
+
+        functions.forEach((funcName) => {
+          if (typeof window[funcName] === "function") {
+            results.innerHTML += `<p>✓ ${funcName} 函数存在</p>`;
+          } else {
+            results.innerHTML += `<p>✗ ${funcName} 函数不存在</p>`;
+          }
+        });
+
+        // 测试Chart.js是否加载
+        if (typeof Chart !== "undefined") {
+          results.innerHTML += "<p>✓ Chart.js已加载</p>";
+        } else {
+          results.innerHTML += "<p>✗ Chart.js未加载</p>";
+        }
+
+        results.innerHTML += "<br><p>测试完成！</p>";
+      });
+    </script>
+  </body>
+</html>
