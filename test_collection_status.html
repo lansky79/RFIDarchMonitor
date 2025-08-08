@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>采集状态监控测试</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container-fluid p-4">
+      <h2>采集状态监控测试</h2>
+
+      <!-- 性能监控 -->
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h5><i class="bi bi-cpu"></i> 性能监控</h5>
+            </div>
+            <div class="card-body">
+              <div class="row text-center">
+                <div class="col-6">
+                  <h6>CPU使用率</h6>
+                  <h4 class="text-primary" id="cpuUsage">--%</h4>
+                </div>
+                <div class="col-6">
+                  <h6>内存使用率</h6>
+                  <h4 class="text-info" id="memoryUsage">--%</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h5><i class="bi bi-activity"></i> 采集状态监控</h5>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-4">
+                  <h6>传感器采集</h6>
+                  <p>最后采集：<span id="sensorLastCollection">--</span></p>
+                  <p>今日采集次数：<span id="sensorCollectionCount">0</span></p>
+                </div>
+                <div class="col-md-4">
+                  <h6>RFID扫描</h6>
+                  <p>最后扫描：<span id="rfidLastScan">--</span></p>
+                  <p>今日扫描次数：<span id="rfidScanCount">0</span></p>
+                </div>
+                <div class="col-md-4">
+                  <h6>系统状态</h6>
+                  <p>运行时间：<span id="systemUptime">--</span></p>
+                  <p>错误次数：<span id="errorCount">0</span></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 采集控制 -->
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h5><i class="bi bi-play-circle"></i> 采集控制</h5>
+            </div>
+            <div class="card-body">
+              <div
+                class="d-flex justify-content-between align-items-center mb-3"
+              >
+                <span>采集状态：</span>
+                <span class="badge bg-success" id="collectionStatus"
+                  >运行中</span
+                >
+              </div>
+              <div class="d-grid gap-2">
+                <button class="btn btn-warning" id="pauseCollectionBtn">
+                  <i class="bi bi-pause-circle"></i> 暂停采集
+                </button>
+                <button
+                  class="btn btn-success"
+                  id="resumeCollectionBtn"
+                  style="display: none"
+                >
+                  <i class="bi bi-play-circle"></i> 恢复采集
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">
+              <h5><i class="bi bi-gear"></i> 采集配置</h5>
+            </div>
+            <div class="card-body">
+              <form id="collectionConfigForm">
+                <div class="mb-3">
+                  <label for="sensorInterval" class="form-label"
+                    >传感器采集间隔(秒)</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="sensorInterval"
+                    value="30"
+                    min="5"
+                    max="300"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="rfidInterval" class="form-label"
+                    >RFID扫描间隔(秒)</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="rfidInterval"
+                    value="10"
+                    min="1"
+                    max="60"
+                  />
+                </div>
+                <button type="submit" class="btn btn-primary">保存配置</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 测试按钮 -->
+      <div class="row mt-4">
+        <div class="col-12">
+          <button id="testStatusBtn" class="btn btn-primary me-2">
+            测试状态数据
+          </button>
+          <button id="testConfigBtn" class="btn btn-success me-2">
+            测试配置数据
+          </button>
+          <button id="clearBtn" class="btn btn-secondary me-2">清空数据</button>
+          <button id="checkElementsBtn" class="btn btn-info me-2">
+            检查元素
+          </button>
+        </div>
+      </div>
+
+      <!-- 状态显示 -->
+      <div class="row mt-4">
+        <div class="col-12">
+          <div class="alert alert-info">
+            <strong>状态：</strong><span id="status">等待测试...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 调试信息 -->
+      <div class="row mt-4">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h6>调试信息</h6>
+            </div>
+            <div class="card-body">
+              <pre id="debugInfo">等待测试...</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // 从main.js复制的相关函数
+      function formatDateTime(datetime) {
+        if (!datetime) return "--";
+        const date = new Date(datetime);
+        return date.toLocaleString("zh-CN");
+      }
+
+      function displayMockCollectionStatus() {
+        console.log("开始显示模拟采集状态数据");
+
+        try {
+          // 生成模拟的性能数据
+          const cpuUsage = (Math.random() * 30 + 15).toFixed(1); // 15-45%
+          const memoryUsage = (Math.random() * 40 + 30).toFixed(1); // 30-70%
+
+          // 更新性能监控
+          const cpuElement = document.getElementById("cpuUsage");
+          const memoryElement = document.getElementById("memoryUsage");
+
+          if (cpuElement) {
+            cpuElement.textContent = `${cpuUsage}%`;
+            console.log(`CPU使用率更新为: ${cpuUsage}%`);
+          } else {
+            console.error("找不到cpuUsage元素");
+          }
+
+          if (memoryElement) {
+            memoryElement.textContent = `${memoryUsage}%`;
+            console.log(`内存使用率更新为: ${memoryUsage}%`);
+          } else {
+            console.error("找不到memoryUsage元素");
+          }
+
+          // 生成模拟的最后采集时间
+          const now = new Date();
+          const sensorLastTime = new Date(
+            now.getTime() - Math.random() * 300000
+          ); // 0-5分钟前
+          const rfidLastTime = new Date(now.getTime() - Math.random() * 600000); // 0-10分钟前
+
+          // 更新采集状态监控
+          const sensorLastElement = document.getElementById(
+            "sensorLastCollection"
+          );
+          const rfidLastElement = document.getElementById("rfidLastScan");
+
+          if (sensorLastElement) {
+            sensorLastElement.textContent = formatDateTime(sensorLastTime);
+            console.log(
+              `传感器最后采集时间更新为: ${formatDateTime(sensorLastTime)}`
+            );
+          } else {
+            console.error("找不到sensorLastCollection元素");
+          }
+
+          if (rfidLastElement) {
+            rfidLastElement.textContent = formatDateTime(rfidLastTime);
+            console.log(
+              `RFID最后扫描时间更新为: ${formatDateTime(rfidLastTime)}`
+            );
+          } else {
+            console.error("找不到rfidLastScan元素");
+          }
+
+          // 生成模拟的统计数据
+          const sensorCollections = Math.floor(Math.random() * 500 + 200); // 200-700
+          const rfidScans = Math.floor(Math.random() * 300 + 100); // 100-400
+          const errorCount = Math.floor(Math.random() * 5); // 0-5
+
+          // 更新统计信息
+          const sensorCountElement = document.getElementById(
+            "sensorCollectionCount"
+          );
+          const rfidCountElement = document.getElementById("rfidScanCount");
+          const errorCountElement = document.getElementById("errorCount");
+
+          if (sensorCountElement) {
+            sensorCountElement.textContent = sensorCollections;
+            console.log(`传感器采集次数更新为: ${sensorCollections}`);
+          } else {
+            console.error("找不到sensorCollectionCount元素");
+          }
+
+          if (rfidCountElement) {
+            rfidCountElement.textContent = rfidScans;
+            console.log(`RFID扫描次数更新为: ${rfidScans}`);
+          } else {
+            console.error("找不到rfidScanCount元素");
+          }
+
+          if (errorCountElement) {
+            errorCountElement.textContent = errorCount;
+            console.log(`错误次数更新为: ${errorCount}`);
+          } else {
+            console.error("找不到errorCount元素");
+          }
+
+          console.log("模拟采集状态数据更新完成");
+          document.getElementById("status").textContent =
+            "采集状态数据更新成功";
+        } catch (error) {
+          console.error("显示模拟采集状态失败:", error);
+          document.getElementById("status").textContent =
+            "采集状态数据更新失败: " + error.message;
+        }
+      }
+
+      function displayMockCollectionConfig() {
+        console.log("开始显示模拟采集配置数据");
+
+        try {
+          // 设置默认配置值
+          const sensorIntervalElement =
+            document.getElementById("sensorInterval");
+          const rfidIntervalElement = document.getElementById("rfidInterval");
+
+          if (sensorIntervalElement) {
+            sensorIntervalElement.value = 30;
+            console.log("传感器采集间隔设置为: 30秒");
+          } else {
+            console.error("找不到sensorInterval元素");
+          }
+
+          if (rfidIntervalElement) {
+            rfidIntervalElement.value = 10;
+            console.log("RFID扫描间隔设置为: 10秒");
+          } else {
+            console.error("找不到rfidInterval元素");
+          }
+
+          // 设置采集状态为运行中
+          const statusElement = document.getElementById("collectionStatus");
+          const pauseBtn = document.getElementById("pauseCollectionBtn");
+          const resumeBtn = document.getElementById("resumeCollectionBtn");
+
+          if (statusElement) {
+            statusElement.textContent = "运行中";
+            statusElement.className = "badge bg-success";
+            console.log("采集状态设置为: 运行中");
+          } else {
+            console.error("找不到collectionStatus元素");
+          }
+
+          if (pauseBtn) pauseBtn.style.display = "block";
+          if (resumeBtn) resumeBtn.style.display = "none";
+
+          console.log("模拟采集配置数据设置完成");
+        } catch (error) {
+          console.error("显示模拟采集配置失败:", error);
+        }
+      }
+
+      function checkElements() {
+        const elements = [
+          "cpuUsage",
+          "memoryUsage",
+          "sensorLastCollection",
+          "rfidLastScan",
+          "sensorCollectionCount",
+          "rfidScanCount",
+          "errorCount",
+          "collectionStatus",
+          "sensorInterval",
+          "rfidInterval",
+        ];
+
+        let info = "页面元素检查结果:\n";
+        elements.forEach((id) => {
+          const element = document.getElementById(id);
+          info += `${id}: ${element ? "存在" : "不存在"}\n`;
+          if (element) {
+            info += `  当前值: ${
+              element.textContent || element.value || "空"
+            }\n`;
+          }
+        });
+
+        document.getElementById("debugInfo").textContent = info;
+      }
+
+      function clearData() {
+        console.log("清空数据");
+
+        const elements = [
+          "cpuUsage",
+          "memoryUsage",
+          "sensorLastCollection",
+          "rfidLastScan",
+          "sensorCollectionCount",
+          "rfidScanCount",
+          "errorCount",
+        ];
+
+        elements.forEach((id) => {
+          const element = document.getElementById(id);
+          if (element) {
+            element.textContent = "--";
+          }
+        });
+
+        document.getElementById("status").textContent = "数据已清空";
+      }
+
+      // 事件绑定
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("页面加载完成");
+
+        document
+          .getElementById("testStatusBtn")
+          .addEventListener("click", () => {
+            console.log("=== 测试采集状态数据 ===");
+            displayMockCollectionStatus();
+          });
+
+        document
+          .getElementById("testConfigBtn")
+          .addEventListener("click", () => {
+            console.log("=== 测试采集配置数据 ===");
+            displayMockCollectionConfig();
+          });
+
+        document
+          .getElementById("clearBtn")
+          .addEventListener("click", clearData);
+        document
+          .getElementById("checkElementsBtn")
+          .addEventListener("click", checkElements);
+
+        // 暂停采集按钮
+        document
+          .getElementById("pauseCollectionBtn")
+          .addEventListener("click", function () {
+            const statusElement = document.getElementById("collectionStatus");
+            if (statusElement) {
+              statusElement.textContent = "已暂停";
+              statusElement.className = "badge bg-warning";
+            }
+            this.style.display = "none";
+            document.getElementById("resumeCollectionBtn").style.display =
+              "block";
+            console.log("采集已暂停");
+          });
+
+        // 恢复采集按钮
+        document
+          .getElementById("resumeCollectionBtn")
+          .addEventListener("click", function () {
+            const statusElement = document.getElementById("collectionStatus");
+            if (statusElement) {
+              statusElement.textContent = "运行中";
+              statusElement.className = "badge bg-success";
+            }
+            this.style.display = "none";
+            document.getElementById("pauseCollectionBtn").style.display =
+              "block";
+            console.log("采集已恢复");
+          });
+
+        // 初始检查
+        checkElements();
+
+        // 自动测试
+        setTimeout(() => {
+          console.log("自动测试开始");
+          displayMockCollectionConfig();
+          displayMockCollectionStatus();
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>

@@ -166,10 +166,6 @@
             <span class="badge bg-success" id="systemStatus">系统正常</span>
           </div>
           <div class="status-item">
-            <i class="bi bi-clock"></i>
-            <span id="currentTime"></span>
-          </div>
-          <div class="status-item">
             <button class="btn btn-outline-light btn-sm w-100" onclick="logout()" title="退出系统">
               <i class="bi bi-box-arrow-right"></i>
               <span class="nav-text">退出</span>
@@ -3127,132 +3123,73 @@
             </div>
           </div>
 
-          <!-- 数据采集控制和数据管理 -->
+          <!-- 数据管理操作 -->
           <div class="row mb-4">
-            <div class="col-md-6">
-              <div class="card" style="height: 400px">
+            <div class="col-12">
+              <div class="card">
                 <div class="card-header">
-                  <h5><i class="bi bi-play-circle"></i> 数据采集控制</h5>
+                  <h5><i class="bi bi-database"></i> 数据管理操作</h5>
                 </div>
                 <div class="card-body">
-                  <div class="mb-4">
-                    <h6>采集状态</h6>
-                    <div class="d-flex align-items-center mb-3">
-                      <span class="badge bg-success me-2" id="collectionStatus"
-                        >运行中</span
-                      >
-                      <small class="text-muted"
-                        >最后采集:
-                        <span id="lastCollectionTime">2分钟前</span></small
-                      >
-                    </div>
-                    <div class="d-grid gap-2 d-md-flex">
+                  <!-- 操作按钮 -->
+                  <div class="row mb-4">
+                    <div class="col-md-3">
                       <button
-                        class="btn btn-warning"
-                        onclick="pauseCollection()"
-                      >
-                        <i class="bi bi-pause-circle"></i> 暂停采集
-                      </button>
-                      <button
-                        class="btn btn-success"
-                        onclick="resumeCollection()"
-                      >
-                        <i class="bi bi-play-circle"></i> 恢复采集
-                      </button>
-                    </div>
-                  </div>
-
-                  <div class="mb-3">
-                    <h6>采集频率设置</h6>
-                    <div class="row">
-                      <div class="col-6">
-                        <label class="form-label form-label-sm"
-                          >环境数据间隔 (秒)</label
-                        >
-                        <input
-                          type="number"
-                          class="form-control form-control-sm"
-                          value="30"
-                          min="10"
-                          max="300"
-                        />
-                      </div>
-                      <div class="col-6">
-                        <label class="form-label form-label-sm"
-                          >RFID扫描间隔 (秒)</label
-                        >
-                        <input
-                          type="number"
-                          class="form-control form-control-sm"
-                          value="5"
-                          min="1"
-                          max="60"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="text-center">
-                    <button
-                      class="btn btn-primary btn-sm"
-                      onclick="saveCollectionSettings()"
-                    >
-                      <i class="bi bi-check-circle"></i> 保存设置
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="card" style="height: 400px">
-                <div class="card-header">
-                  <h5><i class="bi bi-database"></i> 数据管理</h5>
-                </div>
-                <div class="card-body">
-                  <div class="row mb-3">
-                    <div class="col-6">
-                      <button
-                        class="btn btn-info btn-sm w-100"
-                        onclick="backupDatabase()"
+                        class="btn btn-info w-100 mb-2"
+                        data-bs-toggle="modal"
+                        data-bs-target="#backupModal"
                       >
                         <i class="bi bi-download"></i> 备份数据库
                       </button>
                     </div>
-                    <div class="col-6">
+                    <div class="col-md-3">
                       <button
-                        class="btn btn-warning btn-sm w-100"
-                        onclick="restoreDatabase()"
+                        class="btn btn-warning w-100 mb-2"
+                        data-bs-toggle="modal"
+                        data-bs-target="#restoreModal"
                       >
                         <i class="bi bi-upload"></i> 恢复数据库
                       </button>
                     </div>
-                  </div>
-                  <div class="row mb-3">
-                    <div class="col-6">
+                    <div class="col-md-3">
                       <button
-                        class="btn btn-danger btn-sm w-100"
-                        onclick="clearOldData()"
+                        class="btn btn-danger w-100 mb-2"
+                        data-bs-toggle="modal"
+                        data-bs-target="#clearDataModal"
                       >
                         <i class="bi bi-trash"></i> 清理历史数据
                       </button>
                     </div>
-                    <div class="col-6">
+                    <div class="col-md-3">
                       <button
-                        class="btn btn-secondary btn-sm w-100"
-                        onclick="exportData()"
+                        class="btn btn-secondary w-100 mb-2"
+                        data-bs-toggle="modal"
+                        data-bs-target="#exportModal"
                       >
                         <i class="bi bi-file-earmark-arrow-down"></i> 导出数据
                       </button>
                     </div>
                   </div>
+                  
+                  <!-- 数据库状态信息 -->
                   <hr />
-                  <div class="text-center">
-                    <p class="mb-1">数据库大小：<strong>125 MB</strong></p>
-                    <p class="mb-1">
-                      最后备份：<strong>2024-08-05 10:30</strong>
-                    </p>
-                    <p class="mb-0">数据记录：<strong>15,678 条</strong></p>
+                  <div class="row text-center">
+                    <div class="col-md-3">
+                      <h6>数据库大小</h6>
+                      <h4 class="text-primary" id="dbSize">125 MB</h4>
+                    </div>
+                    <div class="col-md-3">
+                      <h6>最后备份</h6>
+                      <h4 class="text-success" id="lastBackup">2024-08-05 10:30</h4>
+                    </div>
+                    <div class="col-md-3">
+                      <h6>数据记录</h6>
+                      <h4 class="text-info" id="recordCount">15,678 条</h4>
+                    </div>
+                    <div class="col-md-3">
+                      <h6>备份文件</h6>
+                      <h4 class="text-warning" id="backupFiles">12 个</h4>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -4327,6 +4264,264 @@
             <button type="button" class="btn btn-primary" onclick="addMaintenanceRecord()">
               添加
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 数据管理模态框 -->
+    
+    <!-- 备份数据库模态框 -->
+    <div class="modal fade" id="backupModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"><i class="bi bi-download"></i> 备份数据库</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="backupForm">
+              <div class="mb-3">
+                <label for="backupName" class="form-label">备份名称</label>
+                <input type="text" class="form-control" id="backupName" 
+                       value="archive_backup_20240809" required>
+              </div>
+              <div class="mb-3">
+                <label for="backupType" class="form-label">备份类型</label>
+                <select class="form-select" id="backupType">
+                  <option value="full">完整备份</option>
+                  <option value="incremental">增量备份</option>
+                  <option value="differential">差异备份</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="backupLocation" class="form-label">备份位置</label>
+                <select class="form-select" id="backupLocation">
+                  <option value="local">本地存储</option>
+                  <option value="cloud">云端存储</option>
+                  <option value="network">网络存储</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="compressBackup" checked>
+                  <label class="form-check-label" for="compressBackup">
+                    压缩备份文件
+                  </label>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="backupDescription" class="form-label">备份描述</label>
+                <textarea class="form-control" id="backupDescription" rows="3" 
+                          placeholder="请输入备份描述信息..."></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-info" onclick="executeBackup()">开始备份</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 恢复数据库模态框 -->
+    <div class="modal fade" id="restoreModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"><i class="bi bi-upload"></i> 恢复数据库</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="restoreForm">
+              <div class="mb-3">
+                <label for="restoreFile" class="form-label">选择备份文件</label>
+                <select class="form-select" id="restoreFile">
+                  <option value="">请选择备份文件...</option>
+                  <option value="backup_20240809_full.zip">archive_backup_20240809_full.zip (125MB)</option>
+                  <option value="backup_20240808_inc.zip">archive_backup_20240808_inc.zip (45MB)</option>
+                  <option value="backup_20240807_full.zip">archive_backup_20240807_full.zip (120MB)</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="restoreMode" class="form-label">恢复模式</label>
+                <select class="form-select" id="restoreMode">
+                  <option value="complete">完整恢复</option>
+                  <option value="partial">部分恢复</option>
+                  <option value="merge">合并恢复</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">恢复选项</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="backupCurrent" checked>
+                  <label class="form-check-label" for="backupCurrent">
+                    恢复前备份当前数据
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="verifyRestore">
+                  <label class="form-check-label" for="verifyRestore">
+                    恢复后验证数据完整性
+                  </label>
+                </div>
+              </div>
+              <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle"></i>
+                <strong>警告：</strong>此操作将覆盖当前数据库，请确保已做好备份！
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-warning" onclick="executeRestore()">开始恢复</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 清理历史数据模态框 -->
+    <div class="modal fade" id="clearDataModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"><i class="bi bi-trash"></i> 清理历史数据</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="clearDataForm">
+              <div class="mb-3">
+                <label for="dataType" class="form-label">数据类型</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="clearEnvironment" checked>
+                  <label class="form-check-label" for="clearEnvironment">
+                    环境监测数据
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="clearRfid">
+                  <label class="form-check-label" for="clearRfid">
+                    RFID扫描记录
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="clearAlerts">
+                  <label class="form-check-label" for="clearAlerts">
+                    历史告警记录
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="clearLogs">
+                  <label class="form-check-label" for="clearLogs">
+                    系统日志文件
+                  </label>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="timeRange" class="form-label">时间范围</label>
+                <select class="form-select" id="timeRange">
+                  <option value="30">30天前的数据</option>
+                  <option value="60">60天前的数据</option>
+                  <option value="90" selected>90天前的数据</option>
+                  <option value="180">180天前的数据</option>
+                  <option value="365">1年前的数据</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="clearMode" class="form-label">清理模式</label>
+                <select class="form-select" id="clearMode">
+                  <option value="soft">软删除（可恢复）</option>
+                  <option value="hard">硬删除（不可恢复）</option>
+                  <option value="archive">归档后删除</option>
+                </select>
+              </div>
+              <div class="alert alert-danger">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <strong>注意：</strong>删除的数据将无法恢复，请谨慎操作！
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-danger" onclick="executeClearData()">开始清理</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 导出数据模态框 -->
+    <div class="modal fade" id="exportModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"><i class="bi bi-file-earmark-arrow-down"></i> 导出数据</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="exportForm">
+              <div class="mb-3">
+                <label for="exportType" class="form-label">导出数据类型</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="exportEnvironment" checked>
+                  <label class="form-check-label" for="exportEnvironment">
+                    环境监测数据
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="exportArchive" checked>
+                  <label class="form-check-label" for="exportArchive">
+                    档案信息数据
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="exportRfidData">
+                  <label class="form-check-label" for="exportRfidData">
+                    RFID扫描数据
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="exportAlertData">
+                  <label class="form-check-label" for="exportAlertData">
+                    告警记录数据
+                  </label>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="exportFormat" class="form-label">导出格式</label>
+                <select class="form-select" id="exportFormat">
+                  <option value="excel">Excel (.xlsx)</option>
+                  <option value="csv">CSV (.csv)</option>
+                  <option value="json">JSON (.json)</option>
+                  <option value="xml">XML (.xml)</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="exportDateRange" class="form-label">时间范围</label>
+                <div class="row">
+                  <div class="col-6">
+                    <input type="date" class="form-control" id="exportStartDate" 
+                           value="2024-08-01">
+                  </div>
+                  <div class="col-6">
+                    <input type="date" class="form-control" id="exportEndDate" 
+                           value="2024-08-09">
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="includeCharts">
+                  <label class="form-check-label" for="includeCharts">
+                    包含图表和统计信息
+                  </label>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-success" onclick="executeExport()">开始导出</button>
           </div>
         </div>
       </div>

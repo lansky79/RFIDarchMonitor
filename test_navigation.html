@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>导航测试</title>
+    <style>
+      .nav-link {
+        padding: 10px;
+        margin: 5px;
+        background: #f0f0f0;
+        cursor: pointer;
+      }
+      .nav-link.active {
+        background: #007bff;
+        color: white;
+      }
+      .page-content {
+        display: none;
+        padding: 20px;
+        border: 1px solid #ccc;
+        margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <div
+        class="nav-link active"
+        data-page="dashboard"
+        onclick="showPage('dashboard')"
+      >
+        仪表盘
+      </div>
+      <div
+        class="nav-link"
+        data-page="inventory"
+        onclick="showPage('inventory')"
+      >
+        智能盘点
+      </div>
+      <div class="nav-link" data-page="alerts" onclick="showPage('alerts')">
+        告警管理
+      </div>
+    </div>
+
+    <div id="dashboard-page" class="page-content" style="display: block">
+      <h2>仪表盘页面</h2>
+      <p>这是仪表盘页面的内容</p>
+    </div>
+
+    <div id="inventory-page" class="page-content">
+      <h2>智能盘点页面</h2>
+      <p>这是智能盘点页面的内容</p>
+    </div>
+
+    <div id="alerts-page" class="page-content">
+      <h2>告警管理页面</h2>
+      <p>这是告警管理页面的内容</p>
+    </div>
+
+    <script>
+      // 全局变量
+      window.currentPage = "dashboard";
+
+      /**
+       * 显示页面
+       * @param {string} pageName - 页面名称
+       */
+      function showPage(pageName) {
+        try {
+          // 隐藏所有页面
+          const pages = document.querySelectorAll(".page-content");
+          pages.forEach((page) => {
+            page.style.display = "none";
+          });
+
+          // 显示指定页面
+          const targetPage = document.getElementById(`${pageName}-page`);
+          if (targetPage) {
+            targetPage.style.display = "block";
+            window.currentPage = pageName;
+          } else {
+            console.error("页面不存在:", pageName);
+            return;
+          }
+
+          // 更新导航状态
+          updateNavigation(pageName);
+
+          console.log(`切换到页面: ${pageName}`);
+        } catch (error) {
+          console.error(`切换页面失败: ${pageName}`, error);
+        }
+      }
+
+      /**
+       * 更新导航状态
+       * @param {string} activePage - 当前激活页面
+       */
+      function updateNavigation(activePage) {
+        // 移除所有active类
+        const navLinks = document.querySelectorAll(".nav-link");
+        navLinks.forEach((link) => {
+          link.classList.remove("active");
+        });
+
+        // 添加active类到当前页面
+        const activeLink = document.querySelector(
+          `[data-page="${activePage}"]`
+        );
+        if (activeLink) {
+          activeLink.classList.add("active");
+        }
+      }
+    </script>
+  </body>
+</html>
